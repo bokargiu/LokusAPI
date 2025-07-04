@@ -1,0 +1,6 @@
+@LokusAPI_HostAddress = http://localhost:5105
+
+GET {{LokusAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
