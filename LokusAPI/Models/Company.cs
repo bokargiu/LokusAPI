@@ -1,4 +1,6 @@
-﻿namespace LokusAPI.Models
+﻿using System.Text.Json.Serialization;
+
+namespace LokusAPI.Models
 {
     public class Company
     {
@@ -8,6 +10,10 @@
         public string ContactOther { get; set; } = string.Empty;
 
         public User User { get; set; }
+
+
+        [JsonIgnore]
+        public ICollection<Image> Images { get; set; } = new List<Image>();
 
     }
 }

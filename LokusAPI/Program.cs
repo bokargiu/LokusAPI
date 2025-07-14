@@ -37,6 +37,9 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddAuthentication();
+// Adicionando service
+builder.Services.AddScoped<AppDb>();
+
 
 //Conexão com o Banco de Dados
 var connection = builder.Configuration.GetConnectionString("connection");
