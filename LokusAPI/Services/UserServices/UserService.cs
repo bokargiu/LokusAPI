@@ -41,12 +41,19 @@ namespace LokusAPI.Services.UserServices
         }
         public async Task<UserDto?> ExistAndGetUser(UserDtoLogin dto)
         {
-            var user = await _context.Users.Where(u => u.Username == dto.User || u.Email == dto.User).FirstOrDefaultAsync();
-            if (user != null && user.Password == dto.Password) return new UserDto(user.Username,
-                                                                                  user.Email,
-                                                                                  user.Password,
-                                                                                  user.Role);
-            return null;
+            try
+            {
+                var user = await _context.Users.Where(u => u.Username == dto.User || u.Email == dto.User).FirstOrDefaultAsync();
+                if (user != null && user.Password == dto.Password) return new UserDto(user.Username,
+                                                                                      user.Email,
+                                                                                      user.Password,
+                                                                                      user.Role);
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

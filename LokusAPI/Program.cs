@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
 var AllowSites = "_AllowSites";
 
 //Adicionando Cors
@@ -47,6 +48,7 @@ builder.Services.AddAuthorization(options =>
 
 //Aicionando Services *
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<AppDb>();
 
 //Conexão com o Banco de Dados
 var connection = builder.Configuration.GetConnectionString("connection");

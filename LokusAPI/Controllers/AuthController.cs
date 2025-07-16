@@ -15,8 +15,8 @@ namespace LokusAPI.Controllers
     public class AuthController : ControllerBase
     {
         protected readonly IConfiguration _configuration;
-        protected readonly UserService _userService;
-        public AuthController(IConfiguration configuration, UserService userService)
+        protected readonly IUserService _userService;
+        public AuthController(IConfiguration configuration, IUserService userService)
         {
             _configuration = configuration;
             _userService = userService;

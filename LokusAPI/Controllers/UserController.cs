@@ -10,13 +10,14 @@ namespace LokusAPI.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        protected readonly UserService _userService;
-        public UserController(UserService userService)
+        private readonly IUserService _userService;
+        public UserController(IUserService userService)
         {
             _userService = userService;
         }
 
         [HttpGet]
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> GetAllUsers()
         {
             return Ok(await _userService.GetUsersAsync());
