@@ -19,7 +19,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-//Jwt Autenticação
+//Jwt Autenticaï¿½ï¿½o
 var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]);
 builder.Services.AddAuthentication(options =>
 {
@@ -50,7 +50,7 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<AppDb>();
 
-//Conexão com o Banco de Dados
+//Conexï¿½o com o Banco de Dados
 var connection = builder.Configuration.GetConnectionString("connection");
 builder.Services.AddDbContext<AppDb>(options =>
 {

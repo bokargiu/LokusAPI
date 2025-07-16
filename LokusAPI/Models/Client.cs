@@ -14,5 +14,8 @@ namespace LokusAPI.Models
         public User User { get; set; }
         public ICollection<Address> Addresses { get; set; } = new List<Address>();
 
+        [JsonIgnore]
+        public ICollection<Image> Images { get; set; } = new List<Image>();
+
     }
 }
