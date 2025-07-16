@@ -10,6 +10,7 @@ namespace LokusAPI.Models
         public string ContactOther { get; set; } = string.Empty;
 
         public User User { get; set; }
+        public ICollection<Address> Addresses { get; set; } = new List<Address>();
 
 
         [JsonIgnore]

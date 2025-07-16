@@ -1,4 +1,6 @@
-﻿using LokusAPI.Models;
+﻿using LokusAPI.Dtos;
+using LokusAPI.Models;
+using LokusAPI.Services.UserServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -13,11 +15,24 @@ namespace LokusAPI.Controllers
     public class AuthController : ControllerBase
     {
         protected readonly IConfiguration _configuration;
-        public AuthController(IConfiguration configuration)
+        protected readonly IUserService _userService;
+        public AuthController(IConfiguration configuration, IUserService userService)
         {
             _configuration = configuration;
+            _userService = userService;
         }
-        private string GenereteJwt(User user)
+        [HttpPost]
+        public async Task<IActionResult> Login([FromBody] UserDtoLogin dto)
+        {
+            var user = await _userService.ExistAndGetUser(dto);
+            if (user != null)
+            {
+                var token = await GenereteJwt(user);
+                return Ok(token);
+            }
+            return Unauthorized();
+        }
+        private async Task<string> GenereteJwt(UserDto user)
         {
             var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);
             var tokenDescription = new SecurityTokenDescriptor 
@@ -26,6 +41,7 @@ namespace LokusAPI.Controllers
                 {
                     //Adicione Clains Aqui *
                     new Claim(ClaimTypes.Name, user.Username),
+                    new Claim(ClaimTypes.Email, user.Email),
                     new Claim(ClaimTypes.Role, user.Role),
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(3),

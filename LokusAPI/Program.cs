@@ -1,10 +1,12 @@
 using LokusAPI.Database;
+using LokusAPI.Services.UserServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
 var AllowSites = "_AllowSites";
 
 //Adicionando Cors
@@ -17,11 +19,10 @@ builder.Services.AddCors(options =>
     });
 });
 
-//Jwt Autenticação
+//Jwt Autenticaï¿½ï¿½o
 var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]);
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
 {
@@ -30,6 +31,7 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateIssuerSigningKey = true,
+        ValidateLifetime = true,
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(key)
@@ -37,11 +39,18 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddAuthentication();
-// Adicionando service
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("ClientPolicy", Policy => Policy.RequireRole("Client"));
+    options.AddPolicy("CompanyPolicy", Policy => Policy.RequireRole("Company"));
+    options.AddPolicy("Admin", Policy => Policy.RequireRole("Admin"));
+});
+
+//Aicionando Services *
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<AppDb>();
 
-
-//Conexão com o Banco de Dados
+//Conexï¿½o com o Banco de Dados
 var connection = builder.Configuration.GetConnectionString("connection");
 builder.Services.AddDbContext<AppDb>(options =>
 {
