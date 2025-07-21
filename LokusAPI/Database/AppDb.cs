@@ -9,5 +9,6 @@ namespace LokusAPI.Database
         public DbSet<User> Users { get; set; }
         public DbSet<Client> Clients { get; set; }
         public DbSet<Company> Companys { get; set; }
+        public DbSet<Image> Images { get; set; }
     }
 }

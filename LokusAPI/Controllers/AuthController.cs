@@ -21,14 +21,14 @@ namespace LokusAPI.Controllers
             _configuration = configuration;
             _userService = userService;
         }
-        [HttpPost]
+        [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserDtoLogin dto)
         {
             var user = await _userService.ExistAndGetUser(dto);
             if (user != null)
             {
                 var token = await GenereteJwt(user);
-                return Ok(token);
+                return Ok(new { token });
             }
             return Unauthorized();
         }

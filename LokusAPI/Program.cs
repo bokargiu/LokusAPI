@@ -16,6 +16,7 @@ builder.Services.AddCors(options =>
     {
         policy.AllowAnyOrigin();
         policy.AllowAnyMethod();
+        policy.AllowAnyHeader();
     });
 });
 
@@ -71,10 +72,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors(AllowSites);
+
 app.UseAuthentication();
-app.UseAuthorization();
 
 app.UseHttpsRedirection();
+
+app.UseAuthorization();
 
 app.MapControllers();
 
