@@ -1,4 +1,5 @@
 using LokusAPI.Database;
+using LokusAPI.Services;
 using LokusAPI.Services.UserServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +21,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-//Jwt Autentica��o
+//Jwt Autenticao
 var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]);
 builder.Services.AddAuthentication(options =>
 {
@@ -35,7 +36,8 @@ builder.Services.AddAuthentication(options =>
         ValidateLifetime = true,
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(key)
+        IssuerSigningKey = new SymmetricSecurityKey(
+           Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
 });
 
@@ -50,6 +52,8 @@ builder.Services.AddAuthorization(options =>
 //Aicionando Services *
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<AppDb>();
+builder.Services.AddScoped<ClientService>();
+
 
 //Conex�o com o Banco de Dados
 var connection = builder.Configuration.GetConnectionString("connection");

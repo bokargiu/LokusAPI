@@ -1,4 +1,5 @@
-﻿using LokusAPI.Database;
+﻿using BCrypt.Net;
+using LokusAPI.Database;
 using LokusAPI.Dtos;
 using LokusAPI.Models;
 using Microsoft.AspNetCore.Identity;
@@ -23,34 +24,45 @@ namespace LokusAPI.Services.UserServices
         }
         public async Task<string> AddUserAsync(UserDto dto)
         {
+
             try
             {
-                User user = new User();
-                user.Username = dto.Username;
-                user.Email = dto.Email;
-                user.Password = dto.Password;
-                user.Role = dto.Role;
+                var hashedPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+
+                User user = new User
+                {
+                    Username = dto.Username,
+                    Email = dto.Email,
+                    Password = hashedPassword,
+                    Role = dto.Role,
+                };
+
                 await _context.Users.AddAsync(user);
                 await _context.SaveChangesAsync();
-                return $"{user.Username} foi Adicionado com Sucesso!!";
+                return $"{user.Username} foi adicionado com sucesso!!";
             }
             catch
             {
-                return "Ocorreu um Erro!";
+                return "Erro ao cadastrar o usuário.";
             }
         }
         public async Task<UserDto?> ExistAndGetUser(UserDtoLogin dto)
         {
             try
             {
-                var user = await _context.Users.Where(u => u.Username == dto.Username || u.Email == dto.Username).FirstOrDefaultAsync();
-                if (user != null && user.Password == dto.Password) return new UserDto(user.Username,
-                                                                                      user.Email,
-                                                                                      user.Password,
-                                                                                      user.Role);
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == dto.Username || u.Email == dto.Username);
+
+                if (user != null && BCrypt.Net.BCrypt.Verify(dto.Password, user.Password))
+                {
+                    return new UserDto(user.Username, user.Email, user.Password, user.Role);
+                }
+
                 return null;
+
             }
+
             catch
+
             {
                 return null;
             }

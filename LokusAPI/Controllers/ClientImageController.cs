@@ -1,5 +1,5 @@
 ﻿using LokusAPI.Dtos;
-using LokusAPI.Services;
+using LokusAPI.Services.ClientServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

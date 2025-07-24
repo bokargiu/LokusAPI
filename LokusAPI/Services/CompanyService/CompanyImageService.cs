@@ -1,4 +1,4 @@
-﻿namespace LokusAPI.Services
+﻿namespace LokusAPI.Services.CompanyService
 {
     public class CompanyService
     {
