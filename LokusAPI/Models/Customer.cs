@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace LokusAPI.Models
 {
-    public class Client
+    public class Customer
     {
         public Guid Id { get; set; } = new Guid();
         public string Name { get; set; } = string.Empty;

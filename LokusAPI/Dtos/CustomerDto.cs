@@ -1,6 +1,6 @@
 ﻿namespace LokusAPI.Dtos
 {
-    public class ClientDto
+    public class CustomerDto
     {
         public string nomeCompleto { get; set; } = string.Empty;
         public string CPF { get; set; } = string.Empty;
@@ -13,9 +13,9 @@
         public string Email { get; set; } = string.Empty;
         public string Role { get; set; } = "Cliente";
 
-        public ClientDto() { }
+        public CustomerDto() { }
 
-        public ClientDto(string nomeCompleto, string cPF, DateTime dataNascimento, string email, string contato, string username, string password, string role)
+        public CustomerDto(string nomeCompleto, string cPF, DateTime dataNascimento, string email, string contato, string username, string password, string role)
         {
             this.nomeCompleto = nomeCompleto;
             CPF = cPF;

@@ -7,11 +7,11 @@ namespace LokusAPI.Controllers
 {
     [Route("api/client-images")]
     [ApiController]
-    public class ClientImageController : ControllerBase
+    public class CustomerImageController : ControllerBase
     {
-        private readonly ClientImageService _imageService;
+        private readonly CustomerImageService _imageService;
 
-        public ClientImageController(ClientImageService imageService)
+        public CustomerImageController(CustomerImageService imageService)
         {
             _imageService = imageService;
         }

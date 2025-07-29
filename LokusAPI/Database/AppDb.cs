@@ -7,7 +7,7 @@ namespace LokusAPI.Database
     {
         public AppDb(DbContextOptions<AppDb> options) : base(options) { }
         public DbSet<User> Users { get; set; }
-        public DbSet<Client> Clients { get; set; }
+        public DbSet<Customer> Clients { get; set; }
         public DbSet<Company> Companys { get; set; }
         public DbSet<Image> Images { get; set; }
     }

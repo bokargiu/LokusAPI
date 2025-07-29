@@ -4,18 +4,18 @@ using LokusAPI.Dtos;
 using LokusAPI.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace LokusAPI.Services
+namespace LokusAPI.Services.ClientServices
 {
-    public class ClientService 
+    public class CostumerService
     {
         private readonly AppDb _context;
 
-        public ClientService(AppDb context)
+        public CostumerService(AppDb context)
         {
             _context = context;
         }
 
-        public async Task<string> ClientSignUpAsync(ClientDto dto)
+        public async Task<string> ClientSignUpAsync(CustomerDto dto)
         {
             bool userExist = await _context.Clients.AnyAsync(c => c.User.Email == dto.Email || c.User.Username == dto.Username);
 
@@ -23,8 +23,8 @@ namespace LokusAPI.Services
                 throw new ApplicationException("Usuário ou Email não cadastrado!");
 
             // cria novo cliente
-            var newClient = new Client
-            { 
+            var newClient = new Customer
+            {
 
                 Name = dto.nomeCompleto,
                 Cpf = dto.CPF,
@@ -37,7 +37,7 @@ namespace LokusAPI.Services
                     Email = dto.Email,
                     Password = BCrypt.Net.BCrypt.HashPassword(dto.Password),
                     Role = "Cliente"
-                } 
+                }
             };
 
 

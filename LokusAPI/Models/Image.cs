@@ -8,7 +8,7 @@ namespace LokusAPI.Models
         public byte[] ImageData { get; set; }
 
         [JsonIgnore]
-        public Client? Client { get; set; }
+        public Customer? Client { get; set; }
         public Company? Company { get; set; }
     }
 }

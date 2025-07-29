@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LokusAPI.Services.ClientServices
 {
-    public class ClientImageService
+    public class CustomerImageService
     {
         private readonly AppDb _context;
 
-        public ClientImageService(AppDb context)
+        public CustomerImageService(AppDb context)
         {
             _context = context;
         }

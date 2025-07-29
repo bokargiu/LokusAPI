@@ -1,5 +1,5 @@
 ﻿using LokusAPI.Dtos;
-using LokusAPI.Services;
+using LokusAPI.Services.ClientServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,17 +7,17 @@ namespace LokusAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SignupClientController : ControllerBase
+    public class SignupCostumerController : ControllerBase
     {
 
-        private readonly ClientService _service;
-        public SignupClientController(ClientService service) 
+        private readonly CostumerService _service;
+        public SignupCostumerController(CostumerService service) 
         {
             _service = service;
         }
 
         [HttpPost("SignUp")]
-        public async Task<IActionResult> ClientSignUp([FromBody] ClientDto dto)
+        public async Task<IActionResult> ClientSignUp([FromBody] CustomerDto dto)
         {
             try
             {
