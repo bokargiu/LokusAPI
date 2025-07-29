@@ -17,12 +17,12 @@ namespace LokusAPI.Controllers
         }
 
         [HttpPost("SignUp")]
-        public async Task<IActionResult> ClientSignUp([FromBody] CustomerDto dto)
+        public async Task<IActionResult> CostumerSignUp([FromBody] CustomerDto dto)
         {
             try
             {
-                var result = await _service.ClientSignUpAsync(dto);
-                return Ok(result);
+                var result = await _service.CostumerSignUpAsync(dto);
+                return Ok(new { mensagem = result });
             }
             catch (ApplicationException ex)
             {

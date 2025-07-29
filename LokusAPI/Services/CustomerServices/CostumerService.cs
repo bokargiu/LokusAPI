@@ -15,15 +15,15 @@ namespace LokusAPI.Services.ClientServices
             _context = context;
         }
 
-        public async Task<string> ClientSignUpAsync(CustomerDto dto)
+        public async Task<string> CostumerSignUpAsync(CustomerDto dto)
         {
             bool userExist = await _context.Clients.AnyAsync(c => c.User.Email == dto.Email || c.User.Username == dto.Username);
 
             if (userExist)
-                throw new ApplicationException("Usuário ou Email não cadastrado!");
+                throw new ApplicationException("Usuário ou Email já cadastrado!");
 
             // cria novo cliente
-            var newClient = new Customer
+            var newCostumer = new Customer
             {
 
                 Name = dto.nomeCompleto,
@@ -41,8 +41,8 @@ namespace LokusAPI.Services.ClientServices
             };
 
 
-            _context.Users.Add(newClient.User);
-            _context.Clients.Add(newClient);
+            _context.Users.Add(newCostumer.User);
+            _context.Clients.Add(newCostumer);
             await _context.SaveChangesAsync();
 
             return "Cadastro realizado com sucesso!";
