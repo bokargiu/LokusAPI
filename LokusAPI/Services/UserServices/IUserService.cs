@@ -8,7 +8,6 @@ namespace LokusAPI.Services.UserServices
         Task<List<User>> GetUsersAsync();
         Task<User?> GetUserByIdAsync(Guid Id);
         Task<string> AddUserAsync(UserDto dto);
-        Task<UserDto?> ExistAndGetUser(UserDtoLogin dto);
-        
+        Task<User?> ExistAndGetUser(UserDtoLogin dto);
     }
 }

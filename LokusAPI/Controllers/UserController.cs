@@ -24,7 +24,7 @@ namespace LokusAPI.Controllers
         }
 
         [HttpGet("id:{id:guid}")]
-        [Authorize]
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> GetUserById(Guid id)
         {
             var user = await _userService.GetUserByIdAsync(id);

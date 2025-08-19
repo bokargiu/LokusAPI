@@ -12,9 +12,8 @@ namespace LokusAPI.Models
         public DateOnly Birthday { get; set; }
 
         public User User { get; set; }
+        public ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
         public ICollection<Address> Addresses { get; set; } = new List<Address>();
-
-        [JsonIgnore]
         public ICollection<Image> Images { get; set; } = new List<Image>();
 
     }

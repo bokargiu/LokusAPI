@@ -1,6 +1,7 @@
 ﻿using LokusAPI.Database;
 using LokusAPI.Dtos;
 using LokusAPI.Models;
+using LokusAPI.Services.AuthServices;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,9 +10,11 @@ namespace LokusAPI.Services.UserServices
     public class UserService : IUserService
     {
         protected readonly AppDb _context;
-        public UserService(AppDb context)
+        private readonly IAuthService _auth;
+        public UserService(AppDb context, IAuthService auth)
         {
             _context = context;
+            _auth = auth;
         }
         public async Task<List<User>> GetUsersAsync()
         {
@@ -28,7 +31,7 @@ namespace LokusAPI.Services.UserServices
                 User user = new User();
                 user.Username = dto.Username;
                 user.Email = dto.Email;
-                user.Password = dto.Password;
+                user.Password = _auth.HashPassword(dto.Password);
                 user.Role = dto.Role;
                 await _context.Users.AddAsync(user);
                 await _context.SaveChangesAsync();
@@ -39,15 +42,12 @@ namespace LokusAPI.Services.UserServices
                 return "Ocorreu um Erro!";
             }
         }
-        public async Task<UserDto?> ExistAndGetUser(UserDtoLogin dto)
+        public async Task<User?> ExistAndGetUser(UserDtoLogin dto)
         {
             try
             {
-                var user = await _context.Users.Where(u => u.Username == dto.User || u.Email == dto.User).FirstOrDefaultAsync();
-                if (user != null && user.Password == dto.Password) return new UserDto(user.Username,
-                                                                                      user.Email,
-                                                                                      user.Password,
-                                                                                      user.Role);
+                User? user = await _context.Users.Where(u => u.Username == dto.User || u.Email == dto.User).FirstOrDefaultAsync();
+                if (user != null) return user;
                 return null;
             }
             catch

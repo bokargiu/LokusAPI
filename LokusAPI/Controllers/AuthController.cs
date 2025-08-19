@@ -1,5 +1,6 @@
 ﻿using LokusAPI.Dtos;
 using LokusAPI.Models;
+using LokusAPI.Services.AuthServices;
 using LokusAPI.Services.UserServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,47 +15,21 @@ namespace LokusAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        protected readonly IConfiguration _configuration;
-        protected readonly IUserService _userService;
-        public AuthController(IConfiguration configuration, IUserService userService)
+        protected readonly IAuthService _auth;
+        public AuthController(IAuthService auth)
         {
-            _configuration = configuration;
-            _userService = userService;
+            _auth = auth;
         }
-        [HttpPost]
+        [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserDtoLogin dto)
         {
-            var user = await _userService.ExistAndGetUser(dto);
-            if (user != null)
+            var response = await _auth.Login(dto);
+            if (response != null)
             {
-                var token = await GenereteJwt(user);
-                return Ok(token);
+                return Ok(new { response });
             }
             return Unauthorized();
         }
-        private async Task<string> GenereteJwt(UserDto user)
-        {
-            var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);
-            var tokenDescription = new SecurityTokenDescriptor 
-            { 
-                Subject = new ClaimsIdentity(new[]
-                {
-                    //Adicione Clains Aqui *
-                    new Claim(ClaimTypes.Name, user.Username),
-                    new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(ClaimTypes.Role, user.Role),
-                }),
-                Expires = DateTime.UtcNow.AddMinutes(3),
-                Issuer = _configuration["Jwt:Issuer"],
-                Audience = _configuration["Jwt:Audience"],
-                SigningCredentials = new SigningCredentials(
-                                         new SymmetricSecurityKey(key),
-                                         SecurityAlgorithms.HmacSha256Signature
-                                            )
-            };
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescription);
-            return tokenHandler.WriteToken(token);
-        }
+
     }
 }

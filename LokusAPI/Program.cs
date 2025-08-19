@@ -1,4 +1,5 @@
 using LokusAPI.Database;
+using LokusAPI.Services.AuthServices;
 using LokusAPI.Services.UserServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -48,6 +49,7 @@ builder.Services.AddAuthorization(options =>
 
 //Aicionando Services *
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<AppDb>();
 
 //Conex�o com o Banco de Dados
@@ -71,6 +73,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors(AllowSites);
+
 app.UseAuthentication();
 app.UseAuthorization();
 

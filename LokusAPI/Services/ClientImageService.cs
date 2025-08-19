@@ -1,6 +1,7 @@
 ﻿using LokusAPI.Database;
 using LokusAPI.Dtos;
 using LokusAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace LokusAPI.Services
 {
@@ -22,17 +23,21 @@ namespace LokusAPI.Services
                 var image = new Image
                 {
                     ImageData = bytes,
-                    ClientId = clientId
+                    Client = null
                 };
+            image.Client = await _context.Clients.Where(c => clientId
+                                                 .Equals(c.Id))
+                                                 .FirstOrDefaultAsync();
+            if (image.Client == null) return;
 
-                _context.Images.Add(image);
+                await _context.Images.AddAsync(image);
                 await _context.SaveChangesAsync();
             }
 
             public async Task<List<ImageDto>> GetImagesAsync(Guid clientId)
             {
                 return await _context.Images
-                    .Where(img => img.ClientId == clientId)
+                    .Where(img => img.Client.Id == clientId)
                     .Select(img => new ImageDto
                     {
                         Id = img.Id,
