@@ -1,5 +1,7 @@
 using LokusAPI.Database;
+using LokusAPI.Services;
 using LokusAPI.Services.ClientServices;
+using LokusAPI.Services.CompanyService;
 using LokusAPI.Services.UserServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -53,6 +55,8 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<AppDb>();
 builder.Services.AddScoped<CostumerService>();
+builder.Services.AddScoped<CompanyService>();
+builder.Services.AddScoped<SubscriptionService>();
 
 
 //Conex�o com o Banco de Dados

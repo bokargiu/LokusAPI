@@ -11,11 +11,10 @@
         public string Username { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
-        public string Role { get; set; } = "Cliente";
 
         public CustomerDto() { }
 
-        public CustomerDto(string nomeCompleto, string cPF, DateTime dataNascimento, string email, string contato, string username, string password, string role)
+        public CustomerDto(string nomeCompleto, string cPF, DateTime dataNascimento, string email, string contato, string username, string password)
         {
             this.nomeCompleto = nomeCompleto;
             CPF = cPF;
@@ -24,7 +23,6 @@
             Contato = contato;
             Username = username;
             Password = password;
-            Role = role;
         }
     }
 

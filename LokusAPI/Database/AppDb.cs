@@ -1,4 +1,5 @@
-﻿using LokusAPI.Models;
+﻿using System.Numerics;
+using LokusAPI.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace LokusAPI.Database
@@ -10,5 +11,9 @@ namespace LokusAPI.Database
         public DbSet<Customer> Clients { get; set; }
         public DbSet<Company> Companys { get; set; }
         public DbSet<Image> Images { get; set; }
+        public DbSet<Subscription> Subscriptions { get; set; }
+
+
+
     }
 }

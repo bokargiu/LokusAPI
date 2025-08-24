@@ -22,7 +22,7 @@ namespace LokusAPI.Services.ClientServices
             if (userExist)
                 throw new ApplicationException("Usuário ou Email já cadastrado!");
 
-            // cria novo cliente
+            // creates a new customer
             var newCostumer = new Customer
             {
 

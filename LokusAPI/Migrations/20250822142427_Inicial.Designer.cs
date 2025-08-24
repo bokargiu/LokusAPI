@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LokusAPI.Migrations
 {
     [DbContext(typeof(AppDb))]
-    [Migration("20250723114355_changeTableName")]
-    partial class changeTableName
+    [Migration("20250822142427_Inicial")]
+    partial class Inicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,36 @@ namespace LokusAPI.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
+
+            modelBuilder.Entity("CompanySubscription", b =>
+                {
+                    b.Property<Guid>("CompaniesId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("HistoryId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("CompaniesId", "HistoryId");
+
+                    b.HasIndex("HistoryId");
+
+                    b.ToTable("CompanySubscription");
+                });
+
+            modelBuilder.Entity("CustomerSubscription", b =>
+                {
+                    b.Property<Guid>("CustomersId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("HistoryId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("CustomersId", "HistoryId");
+
+                    b.HasIndex("HistoryId");
+
+                    b.ToTable("CustomerSubscription");
+                });
 
             modelBuilder.Entity("LokusAPI.Models.Address", b =>
                 {
@@ -39,15 +69,15 @@ namespace LokusAPI.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<Guid?>("ClientId")
-                        .HasColumnType("char(36)");
-
                     b.Property<Guid?>("CompanyId")
                         .HasColumnType("char(36)");
 
                     b.Property<string>("Complement")
                         .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<Guid?>("CostumerId")
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Country")
                         .IsRequired()
@@ -67,42 +97,11 @@ namespace LokusAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClientId");
-
                     b.HasIndex("CompanyId");
 
+                    b.HasIndex("CostumerId");
+
                     b.ToTable("Address");
-                });
-
-            modelBuilder.Entity("LokusAPI.Models.Client", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateOnly>("Birthday")
-                        .HasColumnType("date");
-
-                    b.Property<string>("Contact")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Cpf")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Clients");
                 });
 
             modelBuilder.Entity("LokusAPI.Models.Company", b =>
@@ -133,6 +132,37 @@ namespace LokusAPI.Migrations
                     b.ToTable("Companys");
                 });
 
+            modelBuilder.Entity("LokusAPI.Models.Customer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateOnly>("Birthday")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Contact")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Cpf")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Clients");
+                });
+
             modelBuilder.Entity("LokusAPI.Models.Image", b =>
                 {
                     b.Property<int>("Id")
@@ -158,6 +188,32 @@ namespace LokusAPI.Migrations
                     b.HasIndex("CompanyId");
 
                     b.ToTable("Images");
+                });
+
+            modelBuilder.Entity("LokusAPI.Models.Subscription", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Subscriptions");
                 });
 
             modelBuilder.Entity("LokusAPI.Models.User", b =>
@@ -187,22 +243,52 @@ namespace LokusAPI.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("CompanySubscription", b =>
+                {
+                    b.HasOne("LokusAPI.Models.Company", null)
+                        .WithMany()
+                        .HasForeignKey("CompaniesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LokusAPI.Models.Subscription", null)
+                        .WithMany()
+                        .HasForeignKey("HistoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("CustomerSubscription", b =>
+                {
+                    b.HasOne("LokusAPI.Models.Customer", null)
+                        .WithMany()
+                        .HasForeignKey("CustomersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LokusAPI.Models.Subscription", null)
+                        .WithMany()
+                        .HasForeignKey("HistoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("LokusAPI.Models.Address", b =>
                 {
-                    b.HasOne("LokusAPI.Models.Client", "Client")
-                        .WithMany("Addresses")
-                        .HasForeignKey("ClientId");
-
                     b.HasOne("LokusAPI.Models.Company", "Company")
                         .WithMany("Addresses")
                         .HasForeignKey("CompanyId");
 
-                    b.Navigation("Client");
+                    b.HasOne("LokusAPI.Models.Customer", "Costumer")
+                        .WithMany("Addresses")
+                        .HasForeignKey("CostumerId");
 
                     b.Navigation("Company");
+
+                    b.Navigation("Costumer");
                 });
 
-            modelBuilder.Entity("LokusAPI.Models.Client", b =>
+            modelBuilder.Entity("LokusAPI.Models.Company", b =>
                 {
                     b.HasOne("LokusAPI.Models.User", "User")
                         .WithMany()
@@ -213,7 +299,7 @@ namespace LokusAPI.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("LokusAPI.Models.Company", b =>
+            modelBuilder.Entity("LokusAPI.Models.Customer", b =>
                 {
                     b.HasOne("LokusAPI.Models.User", "User")
                         .WithMany()
@@ -226,7 +312,7 @@ namespace LokusAPI.Migrations
 
             modelBuilder.Entity("LokusAPI.Models.Image", b =>
                 {
-                    b.HasOne("LokusAPI.Models.Client", "Client")
+                    b.HasOne("LokusAPI.Models.Customer", "Client")
                         .WithMany("Images")
                         .HasForeignKey("ClientId");
 
@@ -239,14 +325,14 @@ namespace LokusAPI.Migrations
                     b.Navigation("Company");
                 });
 
-            modelBuilder.Entity("LokusAPI.Models.Client", b =>
+            modelBuilder.Entity("LokusAPI.Models.Company", b =>
                 {
                     b.Navigation("Addresses");
 
                     b.Navigation("Images");
                 });
 
-            modelBuilder.Entity("LokusAPI.Models.Company", b =>
+            modelBuilder.Entity("LokusAPI.Models.Customer", b =>
                 {
                     b.Navigation("Addresses");
 

@@ -29,7 +29,7 @@ namespace LokusAPI.Controllers
             if (user != null)
             {
                 var token = await GenereteJwt(user);
-                return Ok(new { token });
+                return Ok(new { token, role = user.Role });
             }
             return Unauthorized();
         }

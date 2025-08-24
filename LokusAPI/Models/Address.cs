@@ -14,7 +14,7 @@ namespace LokusAPI.Models
         public string Cep { get; set; } = string.Empty;
 
         [JsonIgnore]
-        public Customer? Client { get; set; }
+        public Customer? Costumer { get; set; }
         public Company? Company { get; set; }
     }
 }

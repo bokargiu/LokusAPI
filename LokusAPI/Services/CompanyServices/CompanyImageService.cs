@@ -1,6 +1,6 @@
 ﻿namespace LokusAPI.Services.CompanyService
 {
-    public class CompanyService
+    public class CompanyServiceImage
     {
     }
 }
