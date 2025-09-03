@@ -12,8 +12,8 @@ namespace LokusAPI.Database
         public DbSet<Company> Companys { get; set; }
         public DbSet<Image> Images { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
-
-
+        public DbSet<Space> Spaces { get; set; }
+        public DbSet<Schedule> Schedules { get; set; }
 
     }
 }

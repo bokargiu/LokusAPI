@@ -57,6 +57,8 @@ builder.Services.AddScoped<AppDb>();
 builder.Services.AddScoped<CostumerService>();
 builder.Services.AddScoped<CompanyService>();
 builder.Services.AddScoped<SubscriptionService>();
+builder.Services.AddScoped<SpaceService>();
+builder.Services.AddScoped<ScheduleService>();
 
 
 //Conex�o com o Banco de Dados

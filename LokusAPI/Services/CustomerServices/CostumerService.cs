@@ -36,7 +36,7 @@ namespace LokusAPI.Services.ClientServices
                     Username = dto.Username,
                     Email = dto.Email,
                     Password = BCrypt.Net.BCrypt.HashPassword(dto.Password),
-                    Role = "Cliente"
+                    Role = "Customer"
                 }
             };
 

@@ -187,6 +187,55 @@ namespace LokusAPI.Migrations
                     b.ToTable("Images");
                 });
 
+            modelBuilder.Entity("LokusAPI.Models.Schedule", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("DayOfWeek")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("SpaceId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Time")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SpaceId");
+
+                    b.ToTable("Schedules");
+                });
+
+            modelBuilder.Entity("LokusAPI.Models.Space", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("Capacity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<decimal>("PricePerHour")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Spaces");
+                });
+
             modelBuilder.Entity("LokusAPI.Models.Subscription", b =>
                 {
                     b.Property<Guid>("Id")
@@ -322,6 +371,17 @@ namespace LokusAPI.Migrations
                     b.Navigation("Company");
                 });
 
+            modelBuilder.Entity("LokusAPI.Models.Schedule", b =>
+                {
+                    b.HasOne("LokusAPI.Models.Space", "Space")
+                        .WithMany("Schedules")
+                        .HasForeignKey("SpaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Space");
+                });
+
             modelBuilder.Entity("LokusAPI.Models.Company", b =>
                 {
                     b.Navigation("Addresses");
@@ -334,6 +394,11 @@ namespace LokusAPI.Migrations
                     b.Navigation("Addresses");
 
                     b.Navigation("Images");
+                });
+
+            modelBuilder.Entity("LokusAPI.Models.Space", b =>
+                {
+                    b.Navigation("Schedules");
                 });
 #pragma warning restore 612, 618
         }
