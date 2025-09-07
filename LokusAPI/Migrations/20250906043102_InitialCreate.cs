@@ -260,6 +260,129 @@ namespace LokusAPI.Migrations
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
+            migrationBuilder.CreateTable(
+                name: "Stablishment",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Name = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    VirtualName = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Description = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Contact = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CompanyId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    AddressId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Stablishment", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Stablishment_Address_AddressId",
+                        column: x => x.AddressId,
+                        principalTable: "Address",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Stablishment_Companys_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Companys",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Categories",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Name = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    StablishmentId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Categories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Categories_Stablishment_StablishmentId",
+                        column: x => x.StablishmentId,
+                        principalTable: "Stablishment",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Feedbacks",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    CompanyId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    UserId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Comment = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    OverallRating = table.Column<int>(type: "int", nullable: false),
+                    ParkingRating = table.Column<int>(type: "int", nullable: false),
+                    WifiRating = table.Column<int>(type: "int", nullable: false),
+                    PlugRating = table.Column<int>(type: "int", nullable: false),
+                    PriceRating = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    CustomerId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    StablishmentId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Feedbacks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Feedbacks_Clients_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Clients",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Feedbacks_Companys_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Companys",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Feedbacks_Stablishment_StablishmentId",
+                        column: x => x.StablishmentId,
+                        principalTable: "Stablishment",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Feedbacks_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "StablishmentGalleries",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    FileName = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Data = table.Column<byte[]>(type: "longblob", nullable: false),
+                    StablishmentId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StablishmentGalleries", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StablishmentGalleries_Stablishment_StablishmentId",
+                        column: x => x.StablishmentId,
+                        principalTable: "Stablishment",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Address_CompanyId",
                 table: "Address",
@@ -269,6 +392,11 @@ namespace LokusAPI.Migrations
                 name: "IX_Address_CostumerId",
                 table: "Address",
                 column: "CostumerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Categories_StablishmentId",
+                table: "Categories",
+                column: "StablishmentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Clients_UserId",
@@ -291,6 +419,26 @@ namespace LokusAPI.Migrations
                 column: "HistoryId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Feedbacks_CompanyId",
+                table: "Feedbacks",
+                column: "CompanyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Feedbacks_CustomerId",
+                table: "Feedbacks",
+                column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Feedbacks_StablishmentId",
+                table: "Feedbacks",
+                column: "StablishmentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Feedbacks_UserId",
+                table: "Feedbacks",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Images_ClientId",
                 table: "Images",
                 column: "ClientId");
@@ -304,13 +452,28 @@ namespace LokusAPI.Migrations
                 name: "IX_Schedules_SpaceId",
                 table: "Schedules",
                 column: "SpaceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Stablishment_AddressId",
+                table: "Stablishment",
+                column: "AddressId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Stablishment_CompanyId",
+                table: "Stablishment",
+                column: "CompanyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StablishmentGalleries_StablishmentId",
+                table: "StablishmentGalleries",
+                column: "StablishmentId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Address");
+                name: "Categories");
 
             migrationBuilder.DropTable(
                 name: "CompanySubscription");
@@ -319,22 +482,34 @@ namespace LokusAPI.Migrations
                 name: "CustomerSubscription");
 
             migrationBuilder.DropTable(
+                name: "Feedbacks");
+
+            migrationBuilder.DropTable(
                 name: "Images");
 
             migrationBuilder.DropTable(
                 name: "Schedules");
 
             migrationBuilder.DropTable(
+                name: "StablishmentGalleries");
+
+            migrationBuilder.DropTable(
                 name: "Subscriptions");
+
+            migrationBuilder.DropTable(
+                name: "Spaces");
+
+            migrationBuilder.DropTable(
+                name: "Stablishment");
+
+            migrationBuilder.DropTable(
+                name: "Address");
 
             migrationBuilder.DropTable(
                 name: "Clients");
 
             migrationBuilder.DropTable(
                 name: "Companys");
-
-            migrationBuilder.DropTable(
-                name: "Spaces");
 
             migrationBuilder.DropTable(
                 name: "Users");

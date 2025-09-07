@@ -1,4 +1,6 @@
-﻿using LokusAPI.Dtos;
+﻿using LokusAPI.Dtos.SpaceDto;
+using LokusAPI.Dtos.SpaceDtos;
+using LokusAPI.Dtos.SpaceDtos.SpaceDto;
 using LokusAPI.Models;
 using LokusAPI.Services;
 using Microsoft.AspNetCore.Http;
@@ -17,42 +19,54 @@ namespace LokusAPI.Controllers
             _spaceService = spaceService;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<Space>>> GetSpaces()
+        [HttpPost]
+        public async Task<IActionResult> AddSpace([FromBody] SpaceCreateDto dto)
         {
-            var spaces = await _spaceService.GetSpacesAsync();
+            try
+            {
+                var space = await _spaceService.AddSpace(dto);
+                return Ok(space);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("stablishment/{stablishmentId}")]
+        public async Task<IActionResult> GetSpacesByStablishment(Guid stablishmentId)
+        {
+            var spaces = await _spaceService.GetSpacesByStablishment(stablishmentId);
             return Ok(spaces);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Space>> GetSpace(Guid id)
+        [HttpPut("{spaceId}")]
+        public async Task<IActionResult> UpdateSpace(Guid spaceId, [FromBody] SpaceUpdateDto dto)
         {
-            var space = await _spaceService.GetSpaceByIdAsync(id);
-            if (space == null) return NotFound();
-            return Ok(space);
+            try
+            {
+                var updated = await _spaceService.UpdateSpace(spaceId, dto);
+                return Ok(updated);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        [HttpPost]
-        public async Task<ActionResult<Space>> AddSpace([FromBody] SpaceDto dto)
+        [HttpDelete("{spaceId}")]
+        public async Task<IActionResult> DeleteSpace(Guid spaceId)
         {
-            var space = await _spaceService.AddSpaceAsync(dto.Name, dto.Description, dto.Capacity, dto.PricePerHour);
-            return CreatedAtAction(nameof(GetSpace), new { id = space.Id }, space);
+            try
+            {
+                var result = await _spaceService.DeleteSpace(spaceId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateSpace(Guid id, [FromBody] SpaceDto dto)
-        {
-            var updated = await _spaceService.UpdateSpaceAsync(id, dto.Name, dto.Description, dto.Capacity, dto.PricePerHour);
-            if (!updated) return NotFound();
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteSpace(Guid id)
-        {
-            var deleted = await _spaceService.DeleteSpaceAsync(id);
-            if (!deleted) return NotFound();
-            return NoContent();
-        }
     }
 }

@@ -1,5 +1,6 @@
-﻿using System;
-using LokusAPI.Database;
+﻿using LokusAPI.Database;
+using LokusAPI.Dtos.SpaceDtos.SpaceDto;
+using LokusAPI.Dtos.SpaceDtos;
 using LokusAPI.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,64 +10,65 @@ namespace LokusAPI.Services
     {
 
         private readonly AppDb _context;
-
         public SpaceService(AppDb context)
         {
             _context = context;
         }
 
-        public async Task<List<Space>> GetSpacesAsync()
+        public async Task<Space> AddSpace(SpaceCreateDto dto)
+        {
+            var stablishment = await _context.Stablishments.FindAsync(dto.StablishmentId);
+            if (stablishment == null) throw new Exception("Estabelecimento não encontrado.");
+
+            var space = new Space
+            {
+                Id = Guid.NewGuid(),
+                StablishmentId = dto.StablishmentId,
+                Name = dto.Name,
+                Capacity = dto.Capacity,
+                Description = dto.Description,
+                Price = dto.Price,
+                PriceEnum = dto.PriceEnum
+            };
+
+            _context.Spaces.Add(space);
+            await _context.SaveChangesAsync();
+
+            return space;
+        }
+
+        public async Task<List<Space>> GetSpacesByStablishment(Guid stablishmentId)
         {
             return await _context.Spaces
-                .Include(s => s.Schedules)
+                .Where(s => s.StablishmentId == stablishmentId)
+                .Include(s => s.Bookings)
+                .Include(s => s.Stablishment)
                 .ToListAsync();
         }
 
-        public async Task<Space> AddSpaceAsync(string name, string description, int capacity, decimal price)
+        public async Task<Space> UpdateSpace(Guid spaceId, SpaceUpdateDto dto)
         {
-            var space = new Space { 
-                Name = name,
-                Description = description,
-                Capacity = capacity,
-                PricePerHour = price
-            };
-            _context.Spaces.Add(space);
+            var space = await _context.Spaces.FindAsync(spaceId);
+            if (space == null) throw new Exception("Espaço não encontrado.");
+
+            space.Name = dto.Name ?? space.Name;
+            space.Capacity = dto.Capacity != 0 ? dto.Capacity : space.Capacity;
+            space.Description = dto.Description ?? space.Description;
+            space.Price = dto.Price != 0 ? dto.Price : space.Price;
+            space.PriceEnum = dto.PriceEnum;
+
             await _context.SaveChangesAsync();
             return space;
         }
 
-        public async Task<Space?> GetSpaceByIdAsync(Guid id)
+        public async Task<bool> DeleteSpace(Guid spaceId)
         {
-            return await _context.Spaces
-                .Include(s => s.Schedules)
-                .FirstOrDefaultAsync(s => s.Id == id);
-        }
-
-        public async Task<bool> UpdateSpaceAsync(Guid id, string newName, string? newDescription = null, int? newCapacity = null, decimal? newPriceHour = null )
-        {
-            var space = await _context.Spaces.FindAsync(id);
-            if (space == null) return false;
-
-            space.Name = newName;
-            if (newDescription != null)
-                space.Description = newDescription;
-            if (newCapacity.HasValue) space.Capacity = newCapacity.Value;
-            if (newPriceHour.HasValue) space.PricePerHour = newPriceHour.Value;
-
-            await _context.SaveChangesAsync();
-            return true;
-        }
-
-        public async Task<bool> DeleteSpaceAsync(Guid id)
-        {
-            var space = await _context.Spaces.FindAsync(id);
-            if (space == null) return false;
+            var space = await _context.Spaces.FindAsync(spaceId);
+            if (space == null) throw new Exception("Espaço não encontrado.");
 
             _context.Spaces.Remove(space);
             await _context.SaveChangesAsync();
             return true;
         }
-
     }
-        
 }

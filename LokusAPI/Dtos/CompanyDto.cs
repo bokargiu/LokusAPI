@@ -1,15 +1,16 @@
-﻿namespace LokusAPI.Dtos
+﻿using LokusAPI.Dtos.StablishmentDto;
+
+namespace LokusAPI.Dtos
 {
     public class CompanyDto
     {
         public string NameCompany { get; set; } = string.Empty;
         public string Cnpj { get; set; } = string.Empty;
         public string ContactOther { get; set; } = string.Empty;
-
-
         public string Username { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
+        public List<StablishmentCreateDto> Stablishments { get; set; } = new List<StablishmentCreateDto>();
 
         public CompanyDto() { }
         public CompanyDto(string nameCompany, string cnpj, string contactOther, string username, string password, string email)
@@ -21,5 +22,7 @@
             Password = password;
             Email = email;
         }
+        
+        
     }
 }

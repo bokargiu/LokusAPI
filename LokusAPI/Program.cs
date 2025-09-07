@@ -2,6 +2,8 @@ using LokusAPI.Database;
 using LokusAPI.Services;
 using LokusAPI.Services.ClientServices;
 using LokusAPI.Services.CompanyService;
+using LokusAPI.Services.CompanyServices;
+using LokusAPI.Services.StablishmentImage;
 using LokusAPI.Services.UserServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -46,7 +48,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("ClientPolicy", Policy => Policy.RequireRole("Client"));
+    options.AddPolicy("ClientPolicy", Policy => Policy.RequireRole("Customer"));
     options.AddPolicy("CompanyPolicy", Policy => Policy.RequireRole("Company"));
     options.AddPolicy("Admin", Policy => Policy.RequireRole("Admin"));
 });
@@ -58,7 +60,15 @@ builder.Services.AddScoped<CostumerService>();
 builder.Services.AddScoped<CompanyService>();
 builder.Services.AddScoped<SubscriptionService>();
 builder.Services.AddScoped<SpaceService>();
-builder.Services.AddScoped<ScheduleService>();
+builder.Services.AddScoped<FeedbackService>();
+builder.Services.AddScoped<StablishmentService>();
+builder.Services.AddScoped<IStablishmentGalleryService, StablishmentGalleryService>();
+builder.Services.AddScoped<ICompanyService, CompanyService>();
+builder.Services.AddScoped<BookingService>();
+builder.Services.AddScoped<AvailabilityService>();
+builder.Services.AddScoped<PaymentService>();
+builder.Services.AddScoped<SpaceService>();
+
 
 
 //Conex�o com o Banco de Dados

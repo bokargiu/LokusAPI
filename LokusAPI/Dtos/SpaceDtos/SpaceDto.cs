@@ -1,4 +1,4 @@
-﻿namespace LokusAPI.Dtos
+﻿namespace LokusAPI.Dtos.SpaceDto
 {
     public class SpaceDto
     {
@@ -8,16 +8,16 @@
 
         public int Capacity { get; set; }
 
-        public decimal PricePerHour { get; set; }
+        public decimal Price { get; set; }
 
         SpaceDto() { }
 
-        SpaceDto(string name, string description, int capacity, decimal pricePerHour)
+        SpaceDto(string name, string description, int capacity, decimal price)
         {
             Name = name;
             Description = description;
             Capacity = capacity;
-            PricePerHour = pricePerHour;
+            Price = price;
         }
     }
 }
