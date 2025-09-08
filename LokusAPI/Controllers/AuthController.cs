@@ -2,6 +2,7 @@
 using LokusAPI.Models;
 using LokusAPI.Services.AuthServices;
 using LokusAPI.Services.UserServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -20,7 +21,6 @@ namespace LokusAPI.Controllers
         {
             _auth = auth;
         }
-
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserDtoLogin dto)
         {

@@ -19,17 +19,6 @@ namespace LokusAPI.Controllers
             _imageService = imageService;
         }
 
-        //[HttpPost("{clientId}")]
-        //[Consumes("multipart/form-data")]
-        //public async Task<IActionResult> Upload(Guid clientId,[FromForm] IFormFile image)
-        //{
-        //    if (image == null || image.Length == 0)
-        //        return BadRequest("Imagem inválida.");
-
-        //    await _imageService.UploadImageAsync(clientId, image);
-        //    return Ok(new { message = "Imagem enviada com sucesso." });
-        //}
-
         [HttpGet("{CustomerId}")]
         public async Task<ActionResult<List<ImageDto>>> GetAll(Guid CustomerId)
         {
@@ -42,9 +31,6 @@ namespace LokusAPI.Controllers
         {
             try
             {
-                //await _imageService.UploadProfileImage(clientId, file);
-                //return Ok();
-
                 await _imageService.UploadProfileImage(CustomerId, file);
                 return Ok(new { file.FileName });
 

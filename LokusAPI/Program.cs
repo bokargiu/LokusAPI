@@ -4,6 +4,9 @@ using LokusAPI.Services.AuthServices;
 using LokusAPI.Services.ClientServices;
 using LokusAPI.Services.ImageServices;
 using LokusAPI.Services.SignalRService;
+using LokusAPI.Services;
+using LokusAPI.Services.CompanyService;
+using LokusAPI.Services.StablishmentImage;
 using LokusAPI.Services.UserServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -22,10 +25,11 @@ builder.Services.AddCors(options =>
         policy.AllowAnyHeader();
         policy.AllowAnyOrigin();
         policy.AllowAnyMethod();
+        policy.AllowAnyHeader();
     });
 });
 
-//Jwt Autentica��o
+//Jwt Autenticao
 var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]);
 builder.Services.AddAuthentication(options =>
 {
@@ -40,7 +44,8 @@ builder.Services.AddAuthentication(options =>
         ValidateLifetime = true,
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(key)
+        IssuerSigningKey = new SymmetricSecurityKey(
+           Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
     options.Events = new JwtBearerEvents
     {
@@ -74,6 +79,17 @@ builder.Services.AddScoped<ImageService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>(); 
 builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<SubscriptionService>();
+builder.Services.AddScoped<SpaceService>();
+builder.Services.AddScoped<FeedbackService>();
+builder.Services.AddScoped<StablishmentService>();
+builder.Services.AddScoped<IStablishmentGalleryService, StablishmentGalleryService>();
+builder.Services.AddScoped<ICompanyService, CompanyService>();
+builder.Services.AddScoped<BookingService>();
+builder.Services.AddScoped<AvailabilityService>();
+builder.Services.AddScoped<PaymentService>();
+
+
 
 //Conex�o com o Banco de Dados
 var connection = builder.Configuration.GetConnectionString("connection");
@@ -104,11 +120,11 @@ if (app.Environment.IsDevelopment())
 app.UseCors(AllowSites);
 
 app.UseAuthentication();
-app.UseAuthorization();
 
 app.UseHttpsRedirection();
 
 app.MapHub<ChatHub>("/chatHub");
+app.UseAuthorization();
 
 app.MapControllers();
 

@@ -1,4 +1,5 @@
-﻿using LokusAPI.Database;
+﻿using BCrypt.Net;
+using LokusAPI.Database;
 using LokusAPI.Dtos;
 using LokusAPI.Models;
 using LokusAPI.Services.AuthServices;
@@ -26,6 +27,7 @@ namespace LokusAPI.Services.UserServices
         }
         public async Task<string> AddUserAsync(UserDto dto)
         {
+
             try
             {
                 User user = new User();
@@ -35,24 +37,21 @@ namespace LokusAPI.Services.UserServices
                 user.Role = dto.Role;
                 await _context.Users.AddAsync(user);
                 await _context.SaveChangesAsync();
-                return $"{user.Username} foi Adicionado com Sucesso!!";
+                return $"{user.Username} foi adicionado com sucesso!!";
             }
             catch
             {
-                return "Ocorreu um Erro!";
+                return "Erro ao cadastrar o usuário.";
             }
         }
         public async Task<User?> ExistAndGetUser(UserDtoLogin dto)
         {
-            try
-            {
+            try{
                 User? user = await _context.Users.Where(u => u.Username == dto.User || u.Email == dto.User).FirstOrDefaultAsync();
                 if (user != null) return user;
                 return null;
-                
             }
-            catch
-            {
+            catch {
                 return null;
             }
         }

@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace LokusAPI.Models
 {
@@ -9,13 +10,18 @@ namespace LokusAPI.Models
         public string Cnpj { get; set; } = string.Empty;
         public string ContactOther { get; set; } = string.Empty;
 
+        //relacionamento 1:1
+        public Guid UserId { get; set; }
         public User User { get; set; }
 
         public Guid? ProfileImageId { get; set; }
         public Image? ProfileImage { get; set; }
 
-        public ICollection<Address> Addresses { get; set; } = new List<Address>();
-        public ICollection<Image> Images { get; set; } = new List<Image>();
+        //relacionamento 1:N
+        [JsonIgnore]
+        public ICollection<Subscription> History { get; set; } = new List<Subscription>(); //histórico de assinaturas
+        public ICollection<Stablishment> Stablishments { get; set; } = new List<Stablishment>();
+        public Subscription CurrentSubscription { get; set; } //assintura atual
 
     }
 }
