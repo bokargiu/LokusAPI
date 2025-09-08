@@ -21,6 +21,7 @@ namespace LokusAPI.Controllers
         {
             _auth = auth;
         }
+
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserDtoLogin dto)
         {

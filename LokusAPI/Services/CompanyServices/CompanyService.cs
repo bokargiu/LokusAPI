@@ -26,7 +26,7 @@ namespace LokusAPI.Services.CompanyService
             {
                 Username = dto.Username,
                 Email = dto.Email,
-                Role = "Company",
+                Role = "company",
                 Password = BCrypt.Net.BCrypt.HashPassword(dto.Password)
             };
             _context.Users.Add(user);
