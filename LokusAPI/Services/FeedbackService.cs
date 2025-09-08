@@ -1,6 +1,7 @@
 ﻿using LokusAPI.Database;
 using LokusAPI.Dtos;
 using LokusAPI.Dtos.FeedbackDto;
+using LokusAPI.Dtos.FeedbackDtos;
 using LokusAPI.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,100 +17,88 @@ namespace LokusAPI.Services
             _context = context;
         }
 
-        public async Task<List<FeedbackDto>> GetFeedbacksByCompany(Guid companyId)
-        {
-            var feedbacks = await _context.Feedbacks
-                .Include(f => f.User)
-                .Where(f => f.CompanyId == companyId)
-                .OrderByDescending(f => f.CreatedAt)
-                .ToListAsync();
-
-            return feedbacks.Select(f => new FeedbackDto
+            public async Task<FeedbackAverageDto> CreateFeedback(CreateFeedbackRequestDto request, Feedback.OverallRating overallRating)
             {
-                Comment = f.Comment,
-                Username = f.User.Username, 
-                CreatedAt = f.CreatedAt,
-                OverallRating = f.OverallRating,
-                ParkingRating = f.ParkingRating,
-                WifiRating = f.WifiRating,
-                PlugRating = f.PlugRating,
-                PriceRating = f.PriceRating
-            }).ToList();
-        }
+                var feedback = new Feedback
+                {
+                    StablishmentId = request.StablishmentId,
+                    UserId = request.UserId,
+                    Comment = request.Comment,
+                    OverallRatings = request.OverallRating,
+                    ParkingRatings = request.ParkingRating,
+                    WifiRatings = request.WifiRating,
+                    PlugRatings = request.PlugRating,
+                    PriceRatings = request.PriceRating,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                _context.Feedbacks.Add(feedback);
+                await _context.SaveChangesAsync();
+
+                return await GetFeedbackAveragesByStablishment(request.StablishmentId);
+            }
 
 
-        public async Task<FeedbackDto> CreateFeedback(CreateFeedbackRequest request)
-        {
-            var feedback = new Feedback
+            public async Task<FeedbackAverageDto?> UpdateFeedback(Guid feedbackId, CreateFeedbackRequestDto request)
             {
-                CompanyId = request.CompanyId,
-                UserId = request.UserId,
-                Comment = request.Comment,
-                OverallRating = request.OverallRating,
-                ParkingRating = request.ParkingRating,
-                WifiRating = request.WifiRating,
-                PlugRating = request.PlugRating,
-                PriceRating = request.PriceRating
-            };
+                var feedback = await _context.Feedbacks.FindAsync(feedbackId);
+                if (feedback == null) return null;
 
-            _context.Feedbacks.Add(feedback);
-            await _context.SaveChangesAsync();
+                feedback.Comment = request.Comment;
+                feedback.OverallRatings = request.OverallRating;
+                feedback.ParkingRatings = request.ParkingRating;
+                feedback.WifiRatings = request.WifiRating;
+                feedback.PlugRatings = request.PlugRating;
+                feedback.PriceRatings = request.PriceRating;
 
-            var user = await _context.Users.FindAsync(request.UserId);
+                _context.Feedbacks.Update(feedback);
+                await _context.SaveChangesAsync();
 
-            return new FeedbackDto
+                return await GetFeedbackAveragesByStablishment(feedback.StablishmentId);
+            }
+            public async Task<FeedbackAverageDto?> DeleteFeedback(Guid feedbackId)
             {
-                Comment = feedback.Comment,
-                Username = user?.Username ?? "Anônimo",
-                CreatedAt = feedback.CreatedAt,
-                OverallRating = feedback.OverallRating,
-                ParkingRating = feedback.ParkingRating,
-                WifiRating = feedback.WifiRating,
-                PlugRating = feedback.PlugRating,
-                PriceRating = feedback.PriceRating
-            };
-        }
+                var feedback = await _context.Feedbacks.FindAsync(feedbackId);
+                if (feedback == null) return null;
 
-        public async Task<bool> UpdateFeedback(Guid feedbackId, CreateFeedbackRequest request)
-        {
-            var feedback = await _context.Feedbacks.FindAsync(feedbackId);
-            if (feedback == null) return false;
+                var stablishmentId = feedback.StablishmentId;
 
-            feedback.Comment = request.Comment;
-            feedback.OverallRating = request.OverallRating;
-            feedback.ParkingRating = request.ParkingRating;
-            feedback.WifiRating = request.WifiRating;
-            feedback.PlugRating = request.PlugRating;
-            feedback.PriceRating = request.PriceRating;
+                _context.Feedbacks.Remove(feedback);
+                await _context.SaveChangesAsync();
 
-            _context.Feedbacks.Update(feedback);
-            await _context.SaveChangesAsync();
-            return true;
-        }
-
-        public async Task<bool> DeleteFeedback(Guid feedbackId)
-        {
-            var feedback = await _context.Feedbacks.FindAsync(feedbackId);
-            if (feedback == null) return false;
-
-            _context.Feedbacks.Remove(feedback);
-            await _context.SaveChangesAsync();
-            return true;
-        }
+                return await GetFeedbackAveragesByStablishment(stablishmentId);
+            }
 
 
+            public async Task<FeedbackAverageDto> GetFeedbackAveragesByStablishment(Guid stablishmentId)
+            {
+                var feedbacks = await _context.Feedbacks
+                    .Where(f => f.StablishmentId == stablishmentId)
+                    .ToListAsync();
 
-        public async Task<double> GetCompanyOverallAverage(Guid companyId)
-        {
-            var feedbacks = await _context.Feedbacks
-                .Where(f => f.CompanyId == companyId)
-                .ToListAsync();
+                if (!feedbacks.Any())
+                {
+                    return new FeedbackAverageDto
+                    {
+                        OverallAverage = 0,
+                        ParkingAverage = 0,
+                        WifiAverage = 0,
+                        PlugAverage = 0,
+                        PriceAverage = 0
+                    };
+                }
 
-            if (!feedbacks.Any()) return 0;
-
-            return feedbacks.Average(f => f.OverallRating);
+                return new FeedbackAverageDto
+                {
+                    OverallAverage = feedbacks.Average(f => (int)f.OverallRatings),
+                    ParkingAverage = feedbacks.Average(f => (int)f.ParkingRatings),
+                    WifiAverage = feedbacks.Average(f => (int)f.WifiRatings),
+                    PlugAverage = feedbacks.Average(f => (int)f.PlugRatings),
+                    PriceAverage = feedbacks.Average(f => (int)f.PriceRatings)
+                };
+            }
         }
 
 
-    }
+    
 }

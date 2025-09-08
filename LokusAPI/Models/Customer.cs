@@ -14,18 +14,15 @@ namespace LokusAPI.Models
 
         //relação 1:1 
         public User User { get; set; }
+        public Address Address { get; set; }
 
         //relações 1:N
-        public ICollection<Address> Addresses { get; set; } = new List<Address>();
         public ICollection<Image> Images { get; set; } = new List<Image>();
         public ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
+        public Subscription CurrentSubscription { get; set; }
 
         //histórico das assinaturas
         public ICollection<Subscription> History { get; set; } = new List<Subscription>();
-
-        //Assinatura atual, não mapeaa no banco
-        [NotMapped]
-        public Subscription CurrentSubscription { get; set; }
 
         //reservas do cliente
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();

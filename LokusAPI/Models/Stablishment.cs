@@ -22,6 +22,7 @@ namespace LokusAPI.Models
         public ICollection<Space> Spaces { get; set; } = new List<Space>(); //relacionamento 1:N
         public List<Feedback>? Feedbacks { get; set; } // vários feedbacks para um estabelecimento
         public ICollection<StablishmentGallery> Galleries { get; set; } //galeria para até 10 fotos
+
         public ICollection<Category> Categories { get; set; } = new List<Category>(); //relacionamento 1:N
 
     }

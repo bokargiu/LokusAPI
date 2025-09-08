@@ -33,15 +33,15 @@ namespace LokusAPI.Controllers
 
         //Criar novo feedback
         [HttpPost]
-        public async Task<ActionResult<FeedbackDto>> CreateFeedback([FromBody] CreateFeedbackRequest request)
+        public async Task<ActionResult<FeedbackDto>> CreateFeedback([FromBody] CreateFeedbackRequestDto request)
         {
-            var feedback = await _feedbackService.CreateFeedback(request);
+            var feedback = await _feedbackService.CreateFeedback(request, OverallRating);
             return Ok(feedback);
         }
 
         // Atualizar um feedback existente
         [HttpPut("{feedbackId}")]
-        public async Task<ActionResult> UpdateFeedback(Guid feedbackId, [FromBody] CreateFeedbackRequest request)
+        public async Task<ActionResult> UpdateFeedback(Guid feedbackId, [FromBody] CreateFeedbackRequestDto request)
         {
             var success = await _feedbackService.UpdateFeedback(feedbackId, request);
             return success ? NoContent() : NotFound();
