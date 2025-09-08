@@ -14,6 +14,9 @@ namespace LokusAPI.Models
         //chave estrangeira FK
         public Guid CompanyId { get; set; }
 
+        public Guid? ProfileImageId { get; set; }
+        public Image? ProfileImage { get; set; }
+
         [JsonIgnore]
         public Company Company { get; set; }
         public Address Address { get; set; }

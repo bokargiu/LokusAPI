@@ -13,7 +13,6 @@ namespace LokusAPI.Models
         
         public User User { get; set; }
         public Address Address { get; set; }
-        public User User { get; set; }
 
         public Guid? ProfileImageId { get; set; }
         public Image? ProfileImage { get; set; }
