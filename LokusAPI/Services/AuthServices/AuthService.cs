@@ -30,9 +30,9 @@ namespace LokusAPI.Services.AuthServices
                         new Claim(ClaimTypes.PrimarySid, user.Id.ToString()),
                         new Claim(ClaimTypes.Name, user.Username),
                         new Claim(ClaimTypes.Email, user.Email),
-                        new Claim(ClaimTypes.Role, user.Role),
+                        new Claim(ClaimTypes.Role, user.Role)
                     }),
-                Expires = DateTime.UtcNow.AddMinutes(60),
+                Expires = DateTime.UtcNow.AddDays(3),
                 Issuer = settings["Issuer"],
                 Audience = settings["Audience"],
                 SigningCredentials = new SigningCredentials(

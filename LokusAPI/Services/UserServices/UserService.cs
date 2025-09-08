@@ -49,6 +49,7 @@ namespace LokusAPI.Services.UserServices
                 User? user = await _context.Users.Where(u => u.Username == dto.User || u.Email == dto.User).FirstOrDefaultAsync();
                 if (user != null) return user;
                 return null;
+                
             }
             catch
             {

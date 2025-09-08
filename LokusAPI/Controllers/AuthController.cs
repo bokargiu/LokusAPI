@@ -20,13 +20,14 @@ namespace LokusAPI.Controllers
         {
             _auth = auth;
         }
+
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserDtoLogin dto)
         {
-            var response = await _auth.Login(dto);
-            if (response != null)
+            var token = await _auth.Login(dto);
+            if (token != null)
             {
-                return Ok(new { response });
+                return Ok(new { token });
             }
             return Unauthorized();
         }

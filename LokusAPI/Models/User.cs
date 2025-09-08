@@ -10,5 +10,13 @@ namespace LokusAPI.Models
         public string Email { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
 
+        public User() { }
+        public User(string username, string password, string email, string role)
+        {
+            Username = username;
+            Password = BCrypt.Net.BCrypt.HashPassword(password);
+            Email = email;
+            Role = role;
+        }
     }
 }

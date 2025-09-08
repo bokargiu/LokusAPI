@@ -32,7 +32,7 @@ namespace LokusAPI.Controllers
             return Ok(user);
         }
         [HttpPost("Add")]
-        [Authorize(Policy = "Admin")]
+        //[Authorize(Policy = "Admin")]
         public async Task<IActionResult> AddUser([FromBody] UserDto dto)
         {
             return Ok( await _userService.AddUserAsync(dto));

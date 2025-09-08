@@ -1,5 +1,9 @@
 using LokusAPI.Database;
+using LokusAPI.Models;
 using LokusAPI.Services.AuthServices;
+using LokusAPI.Services.ClientServices;
+using LokusAPI.Services.ImageServices;
+using LokusAPI.Services.SignalRService;
 using LokusAPI.Services.UserServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +19,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: AllowSites, policy =>
     {
+        policy.AllowAnyHeader();
         policy.AllowAnyOrigin();
         policy.AllowAnyMethod();
     });
@@ -37,20 +42,38 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(key)
     };
-});
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Query["access_token"];
+            var path = context.HttpContext.Request.Path;
+            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chatHub"))
+            {
+                context.Token = accessToken;
+            }
+            return Task.CompletedTask;
+        }
+    };
+}); 
+
 
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("ClientPolicy", Policy => Policy.RequireRole("Client"));
-    options.AddPolicy("CompanyPolicy", Policy => Policy.RequireRole("Company"));
-    options.AddPolicy("Admin", Policy => Policy.RequireRole("Admin"));
+    options.AddPolicy("CustomerPolicy", Policy => Policy.RequireRole("customer"));
+    options.AddPolicy("CompanyPolicy", Policy => Policy.RequireRole("company"));
+    options.AddPolicy("Admin", Policy => Policy.RequireRole("admin"));
 });
 
 //Aicionando Services *
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddSignalR();
 builder.Services.AddScoped<AppDb>();
+builder.Services.AddScoped<CustomerImageService>(); 
+builder.Services.AddScoped<ImageService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAuthService, AuthService>(); 
+builder.Services.AddScoped<ICustomerService, CustomerService>();
 
 //Conex�o com o Banco de Dados
 var connection = builder.Configuration.GetConnectionString("connection");
@@ -59,8 +82,14 @@ builder.Services.AddDbContext<AppDb>(options =>
     options.UseMySql(connection, ServerVersion.AutoDetect(connection));
 });
 
-builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.MaxDepth = 64;
+    });
+builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
@@ -78,6 +107,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseHttpsRedirection();
+
+app.MapHub<ChatHub>("/chatHub");
 
 app.MapControllers();
 
