@@ -57,7 +57,7 @@ namespace LokusAPI.Services.AuthServices
         }
         public async Task<string?> Login(UserDtoLogin dto)
         {
-            User? user = await _Db.Users.Where(u => u.Username == dto.User || u.Email == dto.User).FirstOrDefaultAsync();
+            User? user = await _Db.Users.Where(u => u.Username == dto.Username || u.Email == dto.Username).FirstOrDefaultAsync();
             if (user != null && VerifyPassword(dto.Password, user.Password))
             {
                 var token = GenerateJwt(user);

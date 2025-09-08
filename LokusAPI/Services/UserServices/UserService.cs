@@ -47,7 +47,7 @@ namespace LokusAPI.Services.UserServices
         public async Task<User?> ExistAndGetUser(UserDtoLogin dto)
         {
             try{
-                User? user = await _context.Users.Where(u => u.Username == dto.User || u.Email == dto.User).FirstOrDefaultAsync();
+                User? user = await _context.Users.Where(u => u.Username == dto.Username || u.Email == dto.Username).FirstOrDefaultAsync();
                 if (user != null) return user;
                 return null;
             }

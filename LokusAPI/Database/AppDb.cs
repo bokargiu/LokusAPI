@@ -13,7 +13,7 @@ namespace LokusAPI.Database
         #region //User, Customer, Company and Stablishment
         public DbSet<User> Users { get; set; }
         public DbSet<Customer> Customers { get; set; }
-        public DbSet<Company> Companys { get; set; }
+        public DbSet<Company> Companies { get; set; }
         public DbSet<Image> Images { get; set; }
         public DbSet<Stablishment> Stablishments { get; set; }
         #endregion

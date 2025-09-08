@@ -22,8 +22,6 @@ namespace LokusAPI.Models
         public ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
         public Subscription CurrentSubscription { get; set; }
 
-        //histrico das assinaturas
-        public ICollection<Subscription> History { get; set; } = new List<Subscription>();
 
         //reservas do cliente
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();

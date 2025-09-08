@@ -16,7 +16,6 @@ namespace LokusAPI.Models
 
         //relacionamento 1:N
         [JsonIgnore]
-        public ICollection<Subscription> History { get; set; } = new List<Subscription>(); //histórico de assinaturas
         public ICollection<Stablishment> Stablishments { get; set; } = new List<Stablishment>();
         public Subscription CurrentSubscription { get; set; } //assintura atual
 

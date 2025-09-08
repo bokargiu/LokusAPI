@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using LokusAPI.Services.CompanyServices;
 
 var builder = WebApplication.CreateBuilder(args);
 

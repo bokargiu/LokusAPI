@@ -11,7 +11,7 @@ namespace LokusAPI.Models
         [JsonIgnore]
         public Guid? CustomerId { get; set; }
         public Customer? Customer { get; set; }
-        public Guid? CompanyId { get; set; }
-        public Company? Company { get; set; }
+        public Guid? StablishmentId { get; set; }
+        public Stablishment? Stablishment { get; set; }
     }
 }

@@ -12,9 +12,5 @@ namespace LokusAPI.Models
         public string Country { get; set; } = string.Empty;
         public string Complement { get; set; } = string.Empty;
         public string Cep { get; set; } = string.Empty;
-
-        [JsonIgnore]
-        public Customer? Customer { get; set; }
-        public Company? Company { get; set; }
     }
 }
