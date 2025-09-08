@@ -50,13 +50,7 @@ namespace LokusAPI.Database
                 .HasForeignKey(c => c.ProfileImageId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            modelBuilder.Entity<Company>()
-                .HasMany(c => c.Images)
-                .WithOne(i => i.Company)
-                .HasForeignKey(i => i.CompanyId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Company>()
+            modelBuilder.Entity<Stablishment>()
                 .HasOne(c => c.ProfileImage)
                 .WithMany()
                 .HasForeignKey(c => c.ProfileImageId)
