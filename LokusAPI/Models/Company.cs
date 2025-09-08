@@ -14,9 +14,6 @@ namespace LokusAPI.Models
         public Guid UserId { get; set; }
         public User User { get; set; }
 
-        public Guid? ProfileImageId { get; set; }
-        public Image? ProfileImage { get; set; }
-
         //relacionamento 1:N
         [JsonIgnore]
         public ICollection<Subscription> History { get; set; } = new List<Subscription>(); //histórico de assinaturas

@@ -20,7 +20,6 @@ namespace LokusAPI.Database
 
         #region //Images and Gallery
         public DbSet<StablishmentGallery> StablishmentGalleries { get; set; }
-        public DbSet<Image> Images { get; set; }
         #endregion
 
         #region //Company Profile
