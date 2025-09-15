@@ -3,7 +3,7 @@
     public class CustomerDto
     {
         public string nomeCompleto { get; set; } = string.Empty;
-        public string CPF { get; set; } = string.Empty;
+        public string Cpf { get; set; } = string.Empty;
         public DateTime dataNascimento { get; set; } = DateTime.MinValue; 
         public string Contato { get; set; } = string.Empty; 
         
@@ -17,7 +17,7 @@
         public CustomerDto(string nomeCompleto, string cPF, DateTime dataNascimento, string email, string contato, string username, string password)
         {
             this.nomeCompleto = nomeCompleto;
-            CPF = cPF;
+            Cpf = cPF;
             this.dataNascimento = dataNascimento;
             Email = email;
             Contato = contato;

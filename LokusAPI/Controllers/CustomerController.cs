@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace LokusAPI.Controllers
 {
@@ -22,15 +23,24 @@ namespace LokusAPI.Controllers
         {
             try
             {
-                if (dto.Password != dto.ComfirmPassword) return BadRequest("Senhas não Correspondentes!");
+                if (dto.Password != dto.ConfirmPassword) return BadRequest("Senhas não Correspondentes!");
                 Tuple<bool, string> response = await _customerService.SingUpCustomer(dto);
                 if (response.Item1 == true) return Ok(response.Item2);
                 else return BadRequest(response.Item2);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(new
+                {
+                    message = ex.Message,
+                    stackTrace = ex.StackTrace,
+                    inner = ex.InnerException?.Message,
+                    deeper = ex.InnerException?.InnerException?.Message
+                });
             }
+
+
+
         }
         [HttpGet("GetIdByUser/")]
         public async Task<IActionResult> GetCustomerId(Guid UserId)

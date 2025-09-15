@@ -21,7 +21,7 @@ namespace LokusAPI.Controllers
         {
             try
             {
-                var booking = await _bookingService.CreateBooking(dto);
+                var booking = await _bookingService.CreateBookingAsync(dto);
                 return Ok(booking);
             }
             catch (Exception ex)
@@ -35,7 +35,7 @@ namespace LokusAPI.Controllers
         {
             try
             {
-                var booking = await _bookingService.CancelBooking(bookingId, customerId);
+                var booking = await _bookingService.CancelBookingAsync(bookingId, customerId);
                 return Ok(booking);
             }
             catch (Exception ex)
@@ -47,14 +47,14 @@ namespace LokusAPI.Controllers
         [HttpGet("space/{spaceId}")]
         public async Task<IActionResult> GetBookingsBySpace(Guid spaceId)
         {
-            var bookings = await _bookingService.GetBookingsBySpace(spaceId);
+            var bookings = await _bookingService.GetBookingsBySpaceAsync(spaceId);
             return Ok(bookings);
         }
 
         [HttpGet("customer/{customerId}")]
         public async Task<IActionResult> GetBookingsByCustomer(Guid customerId)
         {
-            var bookings = await _bookingService.GetBookingsByCustomer(customerId);
+            var bookings = await _bookingService.GetBookingsByCustomerAsync(customerId);
             return Ok(bookings);
         }
 

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LokusAPI.Migrations
 {
     [DbContext(typeof(AppDb))]
-    [Migration("20250908024548_Initial")]
-    partial class Initial
+    [Migration("20250913230124_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -162,7 +162,7 @@ namespace LokusAPI.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<Guid>("CurrentSubscriptionId")
+                    b.Property<Guid?>("CurrentSubscriptionId")
                         .HasColumnType("char(36)");
 
                     b.Property<string>("NameCompany")
@@ -187,11 +187,8 @@ namespace LokusAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("AddressId")
+                    b.Property<Guid?>("AddressId")
                         .HasColumnType("char(36)");
-
-                    b.Property<DateOnly>("Birthday")
-                        .HasColumnType("date");
 
                     b.Property<string>("Contact")
                         .IsRequired()
@@ -201,8 +198,11 @@ namespace LokusAPI.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<Guid>("CurrentSubscriptionId")
+                    b.Property<Guid?>("CurrentSubscriptionId")
                         .HasColumnType("char(36)");
+
+                    b.Property<DateOnly>("DateOfBirth")
+                        .HasColumnType("date");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -357,7 +357,7 @@ namespace LokusAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("AddressId")
+                    b.Property<Guid?>("AddressId")
                         .HasColumnType("char(36)");
 
                     b.Property<Guid>("CompanyId")
@@ -515,9 +515,7 @@ namespace LokusAPI.Migrations
                 {
                     b.HasOne("LokusAPI.Models.Subscription", "CurrentSubscription")
                         .WithMany("Companies")
-                        .HasForeignKey("CurrentSubscriptionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CurrentSubscriptionId");
 
                     b.HasOne("LokusAPI.Models.User", "User")
                         .WithMany()
@@ -534,15 +532,11 @@ namespace LokusAPI.Migrations
                 {
                     b.HasOne("LokusAPI.Models.Address", "Address")
                         .WithMany()
-                        .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AddressId");
 
                     b.HasOne("LokusAPI.Models.Subscription", "CurrentSubscription")
                         .WithMany("Customers")
-                        .HasForeignKey("CurrentSubscriptionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CurrentSubscriptionId");
 
                     b.HasOne("LokusAPI.Models.Image", "ProfileImage")
                         .WithMany()
@@ -629,9 +623,7 @@ namespace LokusAPI.Migrations
                 {
                     b.HasOne("LokusAPI.Models.Address", "Address")
                         .WithMany()
-                        .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AddressId");
 
                     b.HasOne("LokusAPI.Models.Company", "Company")
                         .WithMany("Stablishments")

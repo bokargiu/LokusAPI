@@ -9,10 +9,10 @@ namespace LokusAPI.Models
         public string Name { get; set; } = string.Empty;
         public string Cpf { get; set; } = string.Empty;
         public string Contact { get; set; } = string.Empty;
-        public DateOnly Birthday { get; set; }
+        public DateOnly DateOfBirth { get; set; }
         
         public User User { get; set; }
-        public Address Address { get; set; }
+        public Address? Address { get; set; }
 
         public Guid? ProfileImageId { get; set; }
         public Image? ProfileImage { get; set; }
@@ -20,7 +20,7 @@ namespace LokusAPI.Models
         //relaes 1:N
         public ICollection<Image> Images { get; set; } = new List<Image>();
         public ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
-        public Subscription CurrentSubscription { get; set; }
+        public Subscription? CurrentSubscription { get; set; }
 
 
         //reservas do cliente

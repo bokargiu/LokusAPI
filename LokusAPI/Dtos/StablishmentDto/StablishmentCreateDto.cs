@@ -10,17 +10,14 @@ namespace LokusAPI.Dtos.StablishmentDto
         public string Description { get; set; } = string.Empty;
         public string Contact { get; set; } = string.Empty;
 
-        public AddressCreateDto Address { get; set; } = new AddressCreateDto();
-
         public StablishmentCreateDto() { }
 
-        public StablishmentCreateDto(string name, string virtualName, string description, string contact, AddressCreateDto address)
+        public StablishmentCreateDto(string name, string virtualName, string description, string contact)
         {
             Name = name;
             VirtualName = virtualName;
             Description = description;
             Contact = contact;
-            Address = address;
         }
     }
 }

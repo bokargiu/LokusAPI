@@ -12,7 +12,6 @@ namespace LokusAPI.Models
 
         public Guid CustomerId { get; set; }
 
-
         //datas e horários
 
         [Required]
@@ -24,12 +23,10 @@ namespace LokusAPI.Models
         [Required]
         public TimeSpan HoraFim { get; set; }
 
-
         //status da reserva
         [Required]
         public BookingStatus Status { get; set; } = BookingStatus.Pendente;
 
-        public Guid? PagamentoId { get; set; }
         public virtual Space? Space { get; set; }
         public virtual Customer? Customer { get; set; }
     }

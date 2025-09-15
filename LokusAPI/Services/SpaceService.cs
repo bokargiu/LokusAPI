@@ -46,20 +46,6 @@ namespace LokusAPI.Services
                 .ToListAsync();
         }
 
-        public async Task<Space> UpdateSpace(Guid spaceId, SpaceUpdateDto dto)
-        {
-            var space = await _context.Spaces.FindAsync(spaceId);
-            if (space == null) throw new Exception("Espaço não encontrado.");
-
-            space.Name = dto.Name ?? space.Name;
-            space.Capacity = dto.Capacity != 0 ? dto.Capacity : space.Capacity;
-            space.Description = dto.Description ?? space.Description;
-            space.Price = dto.Price != 0 ? dto.Price : space.Price;
-            space.PriceEnum = dto.PriceEnum;
-
-            await _context.SaveChangesAsync();
-            return space;
-        }
 
         public async Task<bool> DeleteSpace(Guid spaceId)
         {
@@ -70,5 +56,30 @@ namespace LokusAPI.Services
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<List<Stablishment>> GetStablishmentsByUser(Guid userId)
+        {
+            var company = await _context.Companies.FirstOrDefaultAsync(c => c.UserId == userId);
+            if (company == null) return new List<Stablishment>(); // retorna vazio ao invés de lançar
+
+            return await _context.Stablishments
+                .Where(s => s.CompanyId == company.Id)
+                .ToListAsync();
+        }
+
+
+        public async Task<List<Space>> GetSpacesByUser(Guid userId)
+        {
+            var stablishments = await GetStablishmentsByUser(userId);
+            if (stablishments == null || !stablishments.Any())
+                return new List<Space>();
+
+            var stablishmentIds = stablishments.Select(s => s.Id).ToList();
+
+            return await _context.Spaces
+                .Where(sp => stablishmentIds.Contains(sp.StablishmentId))
+                .ToListAsync();
+        }
+
     }
 }

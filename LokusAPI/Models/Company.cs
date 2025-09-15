@@ -17,7 +17,7 @@ namespace LokusAPI.Models
         //relacionamento 1:N
         [JsonIgnore]
         public ICollection<Stablishment> Stablishments { get; set; } = new List<Stablishment>();
-        public Subscription CurrentSubscription { get; set; } //assintura atual
+        public Subscription? CurrentSubscription { get; set; } //assintura atual
 
     }
 }

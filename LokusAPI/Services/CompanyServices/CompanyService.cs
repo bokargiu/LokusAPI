@@ -2,6 +2,7 @@
 using LokusAPI.Dtos;
 using LokusAPI.Models;
 using LokusAPI.Services.CompanyServices;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace LokusAPI.Services.CompanyService
@@ -15,13 +16,12 @@ namespace LokusAPI.Services.CompanyService
             _context = context;
         }
 
-        public async Task<Stablishment> RegisterAsync(CompanyDto dto)
+        public async Task<Company> SignUpAsync(CompanyDto dto)
         {
-
             if (await _context.Users.AnyAsync(u => u.Email == dto.Email))
                 throw new Exception("Já existe um usuário com este e-mail.");
 
-
+            // cria usuário
             var user = new User
             {
                 Username = dto.Username,
@@ -32,56 +32,44 @@ namespace LokusAPI.Services.CompanyService
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-  
-            var company = await _context.Companies
-                .Include(c => c.Stablishments)
-                .FirstOrDefaultAsync(c => c.Cnpj == dto.Cnpj);
-
-            if (company == null)
+            // cria empresa
+            var company = new Company
             {
+                NameCompany = dto.NameCompany,
+                Cnpj = dto.Cnpj,
+                ContactOther = dto.ContactOther,
+                UserId = user.Id
+            };
 
-                company = new Company
-                {
-                    NameCompany = dto.NameCompany,
-                    Cnpj = dto.Cnpj,
-                    ContactOther = dto.ContactOther,
-                    UserId = user.Id
-                };
-                _context.Companies.Add(company);
-                await _context.SaveChangesAsync();
-            }
-
-
-
-            Stablishment? lastCreated = null;
-
-            foreach (var sDto in dto.Stablishments)
+            
+            var stablishment = new Stablishment
             {
-                var stablishment = new Stablishment
+                Id = Guid.NewGuid(),
+                Name = dto.NameCompany,        
+                VirtualName = dto.NameCompany.ToLower().Replace(" ", "-"),
+                Contact = dto.ContactOther,   
+                Description = string.Empty,    
+                Company = company,
+                Address = new Address          
                 {
-                    Name = sDto.Name,
-                    VirtualName = sDto.VirtualName,
-                    Description = sDto.Description,
-                    Contact = sDto.Contact,
-                    CompanyId = company.Id,
-                    Address = new Address
-                    {
-                        Road = sDto.Address.Road,
-                        City = sDto.Address.City,
-                        State = sDto.Address.State,
-                        Cep = sDto.Address.Cep
-                    }
-                };
+                    Id = Guid.NewGuid(),
+                    Road = string.Empty,
+                    City = string.Empty,
+                    State = string.Empty,
+                    Cep = string.Empty
+                }
+            };
 
-                _context.Stablishments.Add(stablishment);
-                lastCreated = stablishment;
-            }
+            company.Stablishments = new List<Stablishment> { stablishment };
 
+            _context.Companies.Add(company);
             await _context.SaveChangesAsync();
 
-
-            return lastCreated!;
+            return company;
         }
+
+
     }
-    
 }
+    
+

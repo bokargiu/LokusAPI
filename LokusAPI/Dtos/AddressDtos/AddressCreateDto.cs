@@ -1,4 +1,4 @@
-﻿namespace LokusAPI.Dtos
+﻿namespace LokusAPI.Dtos.AddressDtos
 {
     public class AddressCreateDto
     {
@@ -10,9 +10,11 @@
         public string State { get; set; } = string.Empty;
         public string Cep { get; set; } = string.Empty;
 
+        public Guid StablishmentId { get; set; }
+
         public AddressCreateDto() { }
 
-        public AddressCreateDto(string road, string complement, string neighborhood, string city, string state, string cep)
+        public AddressCreateDto(string road, string complement, string neighborhood, string city, string state, string cep, Guid stablishmentId)
         {
             Road = road;
             Complement = complement;
@@ -20,6 +22,7 @@
             City = city;
             State = state;
             Cep = cep;
+            StablishmentId = stablishmentId;
         }
     }
 }

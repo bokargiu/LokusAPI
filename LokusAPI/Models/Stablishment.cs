@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace LokusAPI.Models
@@ -19,7 +20,10 @@ namespace LokusAPI.Models
 
         [JsonIgnore]
         public Company Company { get; set; }
-        public Address Address { get; set; }
+
+        // Relação 1:1 - depois inserido nas configurações no front 
+        public Guid? AddressId { get; set; }
+        public Address? Address { get; set; } = null!;
 
         //relacionamento 1:N
         public ICollection<Space> Spaces { get; set; } = new List<Space>(); //relacionamento 1:N

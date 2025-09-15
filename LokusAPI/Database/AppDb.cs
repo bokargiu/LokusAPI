@@ -55,6 +55,7 @@ namespace LokusAPI.Database
                 .WithMany()
                 .HasForeignKey(c => c.ProfileImageId)
                 .OnDelete(DeleteBehavior.SetNull);
+
         }
     }
 }

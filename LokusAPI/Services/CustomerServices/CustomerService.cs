@@ -22,9 +22,9 @@ namespace LokusAPI.Services.ClientServices
                 User user = new User(dto.Username, dto.Password, dto.Email, "customer");
                 Customer customer = new Customer();
                 customer.Name = dto.Name;
-                customer.Cpf = dto.CPF;
+                customer.Cpf = dto.Cpf;
                 customer.Contact = dto.Contact;
-                customer.Birthday = dto.DateOfBirth;
+                customer.DateOfBirth = dto.DateOfBirth;
                 customer.User = user;
                 await _context.Users.AddAsync(user);
                 await _context.Customers.AddAsync(customer);
