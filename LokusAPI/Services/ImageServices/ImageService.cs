@@ -1,4 +1,5 @@
 ﻿using LokusAPI.Database;
+using LokusAPI.Dtos;
 using LokusAPI.Models;
 using Microsoft.AspNetCore.Http.Metadata;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +30,11 @@ namespace LokusAPI.Services.ImageServices
             await _context.Images.AddAsync(image);
             await _context.SaveChangesAsync();
             return image;
+        }
+        public async Task<string> GetImageAsync(Guid id)
+        {
+            Image i = await _context.Images.FirstOrDefaultAsync(i => i.Id == id);
+            return Convert.ToBase64String(i.ImageData);
         }
         public async Task DelImage(Guid Id)
         {
