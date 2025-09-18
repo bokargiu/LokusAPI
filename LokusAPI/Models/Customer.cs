@@ -9,7 +9,7 @@ namespace LokusAPI.Models
         public string Name { get; set; } = string.Empty;
         public string Cpf { get; set; } = string.Empty;
         public string Contact { get; set; } = string.Empty;
-        public DateOnly Birthday { get; set; }
+        public DateOnly DateOfBirth { get; set; }
         
         public User User { get; set; }
         public Address? Address { get; set; }

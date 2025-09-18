@@ -21,27 +21,23 @@ namespace LokusAPI.Controllers
         [HttpPost("upload")]
         public async Task<IActionResult> UploadGallery([FromBody] StablishmentGalleryCreateDto dto)
         {
+            if (dto == null)
+                return BadRequest("DTO está nulo");
+
+            if (string.IsNullOrEmpty(dto.Base64))
+                return BadRequest("Base64 vazio");
+
             try
             {
                 var imageId = await _stablishmentGalleryService.UploadImageAsync(dto);
-
-                // Retorna a imagem que acabou de ser adicionada
                 var images = await _stablishmentGalleryService.GetImagesAsync(dto.StablishmentId);
                 var uploadedImage = images.FirstOrDefault(i => i.Id == imageId);
-
                 return Ok(uploadedImage);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(new { Message = ex.Message });
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(new { Message = ex.Message });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { Message = ex.Message });
+                // log aqui
+                return StatusCode(500, new { Message = ex.Message, Base64Length = dto.Base64?.Length });
             }
         }
 

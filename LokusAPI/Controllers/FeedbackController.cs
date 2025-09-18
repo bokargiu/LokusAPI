@@ -1,4 +1,5 @@
 ﻿using LokusAPI.Dtos.FeedbackDto;
+using LokusAPI.Dtos.FeedbackDtos;
 using LokusAPI.Models;
 using LokusAPI.Services;
 using Microsoft.AspNetCore.Http;
@@ -18,36 +19,43 @@ namespace LokusAPI.Controllers
             _feedbackService = feedbackService;
         }
 
-        //Obter todos os feedbacks de uma empresa
-        [HttpGet("company/{companyId}")]
-        public async Task<ActionResult<List<FeedbackDto>>> GetFeedbacks(Guid companyId)
+        // Obter todos os feedbacks de uma empresa
+        [HttpGet("stablishment/{stablishmentId}/feedbacks")]
+        public async Task<ActionResult<List<FeedbackDto>>> GetFeedbacks(Guid stablishmentId)
         {
-            return Ok();//await _feedbackService.GetFeedbacksByCompany(companyId));
+            var feedbacks = await _feedbackService.GetFeedbacksByStablishment(stablishmentId);
+            return Ok(feedbacks);
         }
 
-        //Obter a média geral dos ratings de uma empresa
-        [HttpGet("company/{companyId}/average")]
-        public async Task<ActionResult<double>> GetCompanyAverage(Guid companyId)
+        // Obter médias de uma empresa
+        [HttpGet("stablishment/{stablishmentId}/average")]
+        public async Task<ActionResult<FeedbackAverageDto>> GetCompanyAverage(Guid stablishmentId)
         {
-            //var average = await _feedbackService.GetCompanyOverallAverage(companyId);
-            return Ok();//average
+            var averages = await _feedbackService.GetFeedbackAveragesByStablishment(stablishmentId);
+            return Ok(averages);
         }
 
-        //Criar novo feedback
-        [HttpPost]
-        public async Task<ActionResult<FeedbackDto>> CreateFeedback([FromBody] CreateFeedbackRequestDto request)
+
+
+
+
+        [HttpPost("stablishment/{stablishmentId}/feedback")]
+        public async Task<ActionResult<FeedbackAverageDto>> CreateFeedback(Guid stablishmentId, [FromBody] CreateFeedbackRequestDto request)
         {
-            //var feedback = await _feedbackService.CreateFeedback(request, OverallRating);
-            return Ok();// feedback
+            try
+            {
+                // pega o userId do token JWT
+                var userId = Guid.Parse(User.FindFirst("sub").Value);
+
+                var result = await _feedbackService.CreateFeedback(stablishmentId, userId, request);
+                return Ok(result);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
-        // Atualizar um feedback existente
-        [HttpPut("{feedbackId}")]
-        public async Task<ActionResult> UpdateFeedback(Guid feedbackId, [FromBody] CreateFeedbackRequestDto request)
-        {
-            // var success = await _feedbackService.UpdateFeedback(feedbackId, request);
-            return Ok();// success ? NoContent() : NotFound();
-        }
 
         // Deletar um feedback
         [HttpDelete("{feedbackId}")]

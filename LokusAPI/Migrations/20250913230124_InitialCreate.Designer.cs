@@ -4,6 +4,7 @@ using LokusAPI.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LokusAPI.Migrations
 {
     [DbContext(typeof(AppDb))]
-    partial class AppDbModelSnapshot : ModelSnapshot
+    [Migration("20250913230124_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,7 +61,7 @@ namespace LokusAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Addresses", (string)null);
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("LokusAPI.Models.Availability", b =>
@@ -86,7 +89,7 @@ namespace LokusAPI.Migrations
 
                     b.HasIndex("SpaceId");
 
-                    b.ToTable("Availabilities", (string)null);
+                    b.ToTable("Availabilities");
                 });
 
             modelBuilder.Entity("LokusAPI.Models.Booking", b =>
@@ -122,7 +125,7 @@ namespace LokusAPI.Migrations
 
                     b.HasIndex("SpaceId");
 
-                    b.ToTable("Bookings", (string)null);
+                    b.ToTable("Bookings");
                 });
 
             modelBuilder.Entity("LokusAPI.Models.Category", b =>
@@ -142,7 +145,7 @@ namespace LokusAPI.Migrations
 
                     b.HasIndex("StablishmentId");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("LokusAPI.Models.Company", b =>
@@ -175,7 +178,7 @@ namespace LokusAPI.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Companies", (string)null);
+                    b.ToTable("Companies");
                 });
 
             modelBuilder.Entity("LokusAPI.Models.Customer", b =>
@@ -221,7 +224,7 @@ namespace LokusAPI.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Customers", (string)null);
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("LokusAPI.Models.Feedback", b =>
@@ -269,7 +272,7 @@ namespace LokusAPI.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Feedbacks", (string)null);
+                    b.ToTable("Feedbacks");
                 });
 
             modelBuilder.Entity("LokusAPI.Models.Image", b =>
@@ -294,7 +297,7 @@ namespace LokusAPI.Migrations
 
                     b.HasIndex("StablishmentId");
 
-                    b.ToTable("Images", (string)null);
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("LokusAPI.Models.Payment", b =>
@@ -313,7 +316,7 @@ namespace LokusAPI.Migrations
 
                     b.HasIndex("ReservaId");
 
-                    b.ToTable("Payments", (string)null);
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("LokusAPI.Models.Space", b =>
@@ -345,7 +348,7 @@ namespace LokusAPI.Migrations
 
                     b.HasIndex("StablishmentId");
 
-                    b.ToTable("Spaces", (string)null);
+                    b.ToTable("Spaces");
                 });
 
             modelBuilder.Entity("LokusAPI.Models.Stablishment", b =>
@@ -387,7 +390,7 @@ namespace LokusAPI.Migrations
 
                     b.HasIndex("ProfileImageId");
 
-                    b.ToTable("Stablishments", (string)null);
+                    b.ToTable("Stablishments");
                 });
 
             modelBuilder.Entity("LokusAPI.Models.StablishmentGallery", b =>
@@ -411,7 +414,7 @@ namespace LokusAPI.Migrations
 
                     b.HasIndex("StablishmentId");
 
-                    b.ToTable("StablishmentGalleries", (string)null);
+                    b.ToTable("StablishmentGalleries");
                 });
 
             modelBuilder.Entity("LokusAPI.Models.Subscription", b =>
@@ -437,7 +440,7 @@ namespace LokusAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Subscriptions", (string)null);
+                    b.ToTable("Subscriptions");
                 });
 
             modelBuilder.Entity("LokusAPI.Models.User", b =>
@@ -464,7 +467,7 @@ namespace LokusAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("LokusAPI.Models.Availability", b =>
@@ -512,9 +515,7 @@ namespace LokusAPI.Migrations
                 {
                     b.HasOne("LokusAPI.Models.Subscription", "CurrentSubscription")
                         .WithMany("Companies")
-                        .HasForeignKey("CurrentSubscriptionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CurrentSubscriptionId");
 
                     b.HasOne("LokusAPI.Models.User", "User")
                         .WithMany()
@@ -622,9 +623,7 @@ namespace LokusAPI.Migrations
                 {
                     b.HasOne("LokusAPI.Models.Address", "Address")
                         .WithMany()
-                        .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AddressId");
 
                     b.HasOne("LokusAPI.Models.Company", "Company")
                         .WithMany("Stablishments")

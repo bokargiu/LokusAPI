@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using LokusAPI.Dtos.StablishmentDto;
+using LokusAPI.Models;
 
 
 namespace LokusAPI.Services.StablishmentImage
@@ -21,20 +22,20 @@ namespace LokusAPI.Services.StablishmentImage
             if (dto == null || string.IsNullOrEmpty(dto.Base64))
                 throw new ArgumentException("Imagem inválida.");
 
-            // Limite de 10 fotos por estabelecimento
             var count = await _context.StablishmentGalleries.CountAsync(i => i.StablishmentId == dto.StablishmentId);
             if (count >= 10)
                 throw new InvalidOperationException("Limite máximo de 10 fotos atingido.");
 
-            // Remove prefixo tipo "data:image/png;base64,"
-            var base64 = dto.Base64.Contains(",") ? dto.Base64.Split(',')[1] : dto.Base64;
+            // Remove prefixo do Base64 caso exista
+            var base64Data = dto.Base64.Contains(",") ? dto.Base64.Split(',')[1] : dto.Base64;
+            var bytes = Convert.FromBase64String(base64Data);
 
-            var image = new Models.StablishmentGallery
+            var image = new StablishmentGallery
             {
                 Id = Guid.NewGuid(),
                 StablishmentId = dto.StablishmentId,
                 FileName = dto.FileName,
-                Data = Convert.FromBase64String(base64)
+                Data = bytes
             };
 
             _context.StablishmentGalleries.Add(image);

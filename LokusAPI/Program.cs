@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using LokusAPI.Services.CompanyServices;
+using LokusAPI.Services.StablishmentServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,7 +84,7 @@ builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<SubscriptionService>();
 builder.Services.AddScoped<SpaceService>();
 builder.Services.AddScoped<FeedbackService>();
-builder.Services.AddScoped<StablishmentService>();
+builder.Services.AddScoped<IStablishmentService, StablishmentService>();
 builder.Services.AddScoped<IStablishmentGalleryService, StablishmentGalleryService>();
 builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<BookingService>();

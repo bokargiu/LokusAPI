@@ -1,6 +1,6 @@
 ﻿namespace LokusAPI.Dtos.BookingDtos
 {
-    public class BookingReadDto
+    public class BookingResponseDto
     {
         public Guid Id { get; set; }
         public Guid SpaceId { get; set; }
@@ -10,8 +10,8 @@
         public TimeSpan HoraFim { get; set; }
         public string Status { get; set; } = string.Empty;
 
-        public BookingReadDto() { }
-        public BookingReadDto(Guid id, Guid spaceId, Guid customerId, DateTime data, TimeSpan horaInicio, TimeSpan horaFim, string status)
+        public BookingResponseDto() { }
+        public BookingResponseDto(Guid id, Guid spaceId, Guid customerId, DateTime data, TimeSpan horaInicio, TimeSpan horaFim, string status)
         {
             Id = id;
             SpaceId = spaceId;

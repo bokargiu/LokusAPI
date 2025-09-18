@@ -5,6 +5,7 @@ using LokusAPI.Models;
 using LokusAPI.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace LokusAPI.Controllers
 {
@@ -40,19 +41,6 @@ namespace LokusAPI.Controllers
             return Ok(spaces);
         }
 
-        [HttpPut("{spaceId}")]
-        public async Task<IActionResult> UpdateSpace(Guid spaceId, [FromBody] SpaceUpdateDto dto)
-        {
-            try
-            {
-                var updated = await _spaceService.UpdateSpace(spaceId, dto);
-                return Ok(updated);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
 
         [HttpDelete("{spaceId}")]
         public async Task<IActionResult> DeleteSpace(Guid spaceId)
@@ -67,6 +55,39 @@ namespace LokusAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("byUser")]
+        public async Task<IActionResult> GetByUser([FromQuery] Guid userId)
+        {
+            try
+            {
+                var stablishments = await _spaceService.GetStablishmentsByUser(userId);
+                if (stablishments == null || !stablishments.Any())
+                    return NotFound("Nenhum estabelecimento encontrado para este usuário.");
+
+                return Ok(stablishments);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("byUser/spaces")]
+        public async Task<IActionResult> GetSpacesByUser([FromQuery] Guid userId)
+        {
+            try
+            {
+                var spaces = await _spaceService.GetSpacesByUser(userId);
+                return Ok(spaces);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
 
     }
 }

@@ -15,7 +15,7 @@ namespace LokusAPI.Services
             _context = context;
         }
 
-        public async Task<Booking> CreateBooking(BookingCreateDto dto)
+        public async Task<Booking> CreateBookingAsync(BookingCreateDto dto)
         {
             var space = await _context.Spaces.FindAsync(dto.SpaceId);
             if (space == null) throw new Exception("Espaço não encontrado.");
@@ -58,22 +58,12 @@ namespace LokusAPI.Services
 
             _context.Bookings.Add(booking);
 
-            // simulação do pagamento
-            var payment = new Payment
-            {
-                Id = Guid.NewGuid(),
-                ReservaId = booking.Id,
-                Price = space.Price
-            };
-
-            _context.Payments.Add(payment);
-
             await _context.SaveChangesAsync();
 
             return booking;
         }
 
-        public async Task<Booking> CancelBooking(Guid bookingId, Guid customerId)
+        public async Task<Booking> CancelBookingAsync(Guid bookingId, Guid customerId)
         {
 
             var booking = await _context.Bookings
@@ -90,20 +80,40 @@ namespace LokusAPI.Services
             return booking;
         }
 
-        public async Task<List<Booking>> GetBookingsBySpace(Guid spaceId)
+        public async Task<List<BookingResponseDto>> GetBookingsBySpaceAsync(Guid spaceId)
         {
-            return await _context.Bookings
-                .Include(b => b.Customer)
-                .Where(b => b.SpaceId == spaceId)
-                .ToListAsync();
+            var bookings = await _context.Bookings
+               .Include(b => b.Customer)
+               .Where(b => b.SpaceId == spaceId)
+               .ToListAsync();
+
+            return bookings.Select(b => new BookingResponseDto(
+                b.Id,
+                b.SpaceId,
+                b.CustomerId,
+                b.Data,
+                b.HoraInicio,
+                b.HoraFim,
+                b.Status.ToString()
+            )).ToList();
         }
 
-        public async Task<List<Booking>> GetBookingsByCustomer(Guid customerId)
+        public async Task<List<BookingResponseDto>> GetBookingsByCustomerAsync(Guid customerId)
         {
-            return await _context.Bookings
+            var bookings = await _context.Bookings
                 .Include(b => b.Space)
                 .Where(b => b.CustomerId == customerId)
                 .ToListAsync();
+
+            return bookings.Select(b => new BookingResponseDto(
+                b.Id,
+                b.SpaceId,
+                b.CustomerId,
+                b.Data,
+                b.HoraInicio,
+                b.HoraFim,
+                b.Status.ToString()
+            )).ToList();
         }
     }
 }

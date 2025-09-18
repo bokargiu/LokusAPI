@@ -1,4 +1,7 @@
-﻿namespace LokusAPI.Dtos.StablishmentDto
+﻿using LokusAPI.Dtos.AddressDtos;
+using LokusAPI.Models;
+
+namespace LokusAPI.Dtos.StablishmentDto
 {
     public class StablishmentResponseDto
     {
@@ -11,19 +14,22 @@
 
         public Guid CompanyId { get; set; }
 
+        public AddressResponseDto? Address { get; set; } = null!;
+
         public List<StablishmentGalleryDto> Galleries { get; set; } = new List<StablishmentGalleryDto>();
 
         public StablishmentResponseDto() { }
 
-        public StablishmentResponseDto(Guid id, string name, string virtualName, string description, string contact, Guid companyId, List<StablishmentGalleryDto> galleries)
+        public StablishmentResponseDto(Stablishment stablishment)
         {
-            Id = id;
-            Name = name;
-            VirtualName = virtualName;
-            Description = description;
-            Contact = contact;
-            CompanyId = companyId;
-            Galleries = galleries;
+            Id = stablishment.Id;
+            Name = stablishment.Name;
+            VirtualName = stablishment.VirtualName;
+            Description = stablishment.Description;
+            Contact = stablishment.Contact;
+            CompanyId = stablishment.CompanyId;
+            Galleries = new List<StablishmentGalleryDto>();
+            Address = stablishment.Address != null ? new AddressResponseDto(stablishment.Address) : null;
         }
     }
 }
