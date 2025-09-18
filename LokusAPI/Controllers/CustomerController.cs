@@ -18,14 +18,14 @@ namespace LokusAPI.Controllers
         { 
             _customerService = customerService;
         }
-        [HttpPost("SingUp")]
-        public async Task<IActionResult> SingUp([FromBody] SingUpClientDto dto)
+        [HttpPost("SignUp")]
+        public async Task<IActionResult> SignUp([FromBody] SingUpClientDto dto)
         {
             try
             {
                 if (dto.Password != dto.ConfirmPassword) return BadRequest("Senhas não Correspondentes!");
-                Tuple<bool, string> response = await _customerService.SingUpCustomer(dto);
-                if (response.Item1 == true) return Ok(response.Item2);
+                Tuple<bool, string> response = await _customerService.SignUpCustomer(dto);
+                if (response.Item1 == true) return Ok(new { mensagem = response.Item2 });
                 else return BadRequest(response.Item2);
             }
             catch (Exception ex)
